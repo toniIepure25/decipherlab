@@ -14,6 +14,7 @@ data/interim/
 data/processed/
 data/synthetic/generated/
 outputs/runs/
+outputs/sequence_*
 
 # Keep raw source datasets out of Git while preserving lightweight notes.
 data/raw/**

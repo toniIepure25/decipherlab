@@ -204,7 +204,8 @@ def run_sequence_branch_experiment(
     if not resolved.structured_uncertainty.enabled or not resolved.decoding.enabled:
         raise ValueError("structured_uncertainty.enabled and decoding.enabled must both be true.")
 
-    run_context = prepare_run_context(resolved, suffix="sequence_branch")
+    posterior_strategy = resolved.posterior.strategy if strategy_override is None else strategy_override
+    run_context = prepare_run_context(resolved, suffix=f"sequence_branch_{posterior_strategy}")
     logger = configure_logging(run_context.run_dir)
     dump_config(resolved, run_context.run_dir / "config.yaml")
 
@@ -230,7 +231,6 @@ def run_sequence_branch_experiment(
 
     train_features = extract_feature_matrix(train_glyphs, downsample=resolved.vision.feature_downsample)
     validation_features = extract_feature_matrix(validation_glyphs, downsample=resolved.vision.feature_downsample)
-    posterior_strategy = resolved.posterior.strategy if strategy_override is None else strategy_override
     posterior_model = fit_posterior_model(
         train_features=train_features,
         train_labels=[glyph.true_symbol for glyph in train_glyphs],
