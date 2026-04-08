@@ -1,0 +1,70 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "decipherlab"
+version = "0.1.0"
+description = "Research-grade, uncertainty-aware decipherment experiments for unknown scripts and historical ciphers."
+readme = { file = "README.md", content-type = "text/markdown" }
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [
+  { name = "DecipherLab Contributors" },
+]
+keywords = [
+  "decipherment",
+  "uncertainty",
+  "research",
+  "computer-vision",
+  "historical-scripts",
+  "ciphers",
+  "reproducibility",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "scikit-learn>=1.3",
+  "networkx>=3.0",
+  "pydantic>=2.6",
+  "PyYAML>=6.0",
+  "typer>=0.12",
+  "matplotlib>=3.7",
+  "Pillow>=10.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+]
+
+[project.scripts]
+decipherlab = "decipherlab.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/toniIepure25/decipherlab"
+Repository = "https://github.com/toniIepure25/decipherlab"
+Issues = "https://github.com/toniIepure25/decipherlab/issues"
+Documentation = "https://github.com/toniIepure25/decipherlab#readme"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "-q"

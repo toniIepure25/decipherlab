@@ -1,0 +1,25 @@
+__pycache__/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+build/
+dist/
+*.egg-info/
+
+.codex
+DecipherLab_Research_Blueprint.docx
+
+data/interim/
+data/processed/
+data/synthetic/generated/
+outputs/runs/
+
+# Keep raw source datasets out of Git while preserving lightweight notes.
+data/raw/**
+!data/raw/**/
+data/raw/**/*
+!data/raw/**/README.md
+!data/raw/**/manifest*.yaml
+
+.DS_Store

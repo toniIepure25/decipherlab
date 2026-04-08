@@ -1,0 +1,945 @@
+{
+  "ambiguity_rows": [
+    {
+      "ambiguity_level": 0.0,
+      "calibrated_uncertainty_topk_delta": 0.22027110289587185,
+      "combined_ece_delta": -0.43335338578358923,
+      "combined_nll_delta": -5.409584213586172,
+      "combined_topk_delta": 0.32655576093653726,
+      "dataset": "omniglot_character_crops",
+      "fixed_calibration_topk_delta": 0.1062846580406654,
+      "heuristic_uncertainty_topk_delta": 0.17128773875539124,
+      "uncertainty_calibration_topk_delta": 0.15526802218114605
+    },
+    {
+      "ambiguity_level": 0.15,
+      "calibrated_uncertainty_topk_delta": 0.029112754158964877,
+      "combined_ece_delta": -0.4439742185334789,
+      "combined_nll_delta": -0.5354683042987697,
+      "combined_topk_delta": 0.03363113575682892,
+      "dataset": "omniglot_character_crops",
+      "fixed_calibration_topk_delta": 0.004518381597864037,
+      "heuristic_uncertainty_topk_delta": 0.019408502772643253,
+      "uncertainty_calibration_topk_delta": 0.014222632984185664
+    },
+    {
+      "ambiguity_level": 0.3,
+      "calibrated_uncertainty_topk_delta": 0.017457383446292874,
+      "combined_ece_delta": -0.40434265396968483,
+      "combined_nll_delta": -0.36693968874833277,
+      "combined_topk_delta": 0.023208050934483467,
+      "dataset": "omniglot_character_crops",
+      "fixed_calibration_topk_delta": 0.005750667488190593,
+      "heuristic_uncertainty_topk_delta": 0.011295953994660095,
+      "uncertainty_calibration_topk_delta": 0.011912096939823374
+    },
+    {
+      "ambiguity_level": 0.45,
+      "calibrated_uncertainty_topk_delta": 0.012117477921544465,
+      "combined_ece_delta": -0.3548309486985051,
+      "combined_nll_delta": -0.2463547769253367,
+      "combined_topk_delta": 0.01591702608338468,
+      "dataset": "omniglot_character_crops",
+      "fixed_calibration_topk_delta": 0.0037995481618402134,
+      "heuristic_uncertainty_topk_delta": 0.009396179913739986,
+      "uncertainty_calibration_topk_delta": 0.006520846169644691
+    },
+    {
+      "ambiguity_level": 0.0,
+      "calibrated_uncertainty_topk_delta": 0.05432595573440646,
+      "combined_ece_delta": -0.04862462279607906,
+      "combined_nll_delta": -2.0354888083317335,
+      "combined_topk_delta": 0.11871227364185111,
+      "dataset": "sklearn_digits_crops",
+      "fixed_calibration_topk_delta": 0.06438631790744465,
+      "heuristic_uncertainty_topk_delta": 0.11670020120724345,
+      "uncertainty_calibration_topk_delta": 0.002012072434607659
+    },
+    {
+      "ambiguity_level": 0.15,
+      "calibrated_uncertainty_topk_delta": 0.49094567404426553,
+      "combined_ece_delta": 0.20307914689428794,
+      "combined_nll_delta": 0.433901900207142,
+      "combined_topk_delta": 0.24815560026827635,
+      "dataset": "sklearn_digits_crops",
+      "fixed_calibration_topk_delta": -0.24279007377598927,
+      "heuristic_uncertainty_topk_delta": 0.5352112676056339,
+      "uncertainty_calibration_topk_delta": -0.2870556673373575
+    },
+    {
+      "ambiguity_level": 0.3,
+      "calibrated_uncertainty_topk_delta": 0.46814218645204564,
+      "combined_ece_delta": 0.08663033763098271,
+      "combined_nll_delta": -1.102870221393994,
+      "combined_topk_delta": 0.36217303822937624,
+      "dataset": "sklearn_digits_crops",
+      "fixed_calibration_topk_delta": -0.10596914822266935,
+      "heuristic_uncertainty_topk_delta": 0.6465459423205902,
+      "uncertainty_calibration_topk_delta": -0.2843729040912139
+    },
+    {
+      "ambiguity_level": 0.45,
+      "calibrated_uncertainty_topk_delta": 0.45003353454057676,
+      "combined_ece_delta": 0.02921574887218718,
+      "combined_nll_delta": -1.732024515729215,
+      "combined_topk_delta": 0.409121395036888,
+      "dataset": "sklearn_digits_crops",
+      "fixed_calibration_topk_delta": -0.04091213950368879,
+      "heuristic_uncertainty_topk_delta": 0.596914822266935,
+      "uncertainty_calibration_topk_delta": -0.18779342723004697
+    },
+    {
+      "ambiguity_level": 0.0,
+      "calibrated_uncertainty_topk_delta": 0.22122448979591836,
+      "combined_ece_delta": -0.18201041780431831,
+      "combined_nll_delta": -6.2222307152460345,
+      "combined_topk_delta": 0.37306122448979595,
+      "dataset": "kuzushiji49_balanced_crops",
+      "fixed_calibration_topk_delta": 0.1518367346938776,
+      "heuristic_uncertainty_topk_delta": 0.23918367346938774,
+      "uncertainty_calibration_topk_delta": 0.13387755102040821
+    },
+    {
+      "ambiguity_level": 0.45,
+      "calibrated_uncertainty_topk_delta": 0.251156462585034,
+      "combined_ece_delta": -0.16812249773074248,
+      "combined_nll_delta": -4.252231022955652,
+      "combined_topk_delta": 0.268843537414966,
+      "dataset": "kuzushiji49_balanced_crops",
+      "fixed_calibration_topk_delta": 0.01768707482993198,
+      "heuristic_uncertainty_topk_delta": 0.26761904761904765,
+      "uncertainty_calibration_topk_delta": 0.001224489795918382
+    }
+  ],
+  "condition_ci_rows": [
+    {
+      "condition": "A. Fixed Transcript + Heuristic Posterior",
+      "dataset": "omniglot_character_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.9551114191825838,
+      "mean_symbol_ece_ci_lower": 0.9538467216060793,
+      "mean_symbol_ece_ci_upper": 0.956408528445266,
+      "mean_symbol_nll": 17.59380252766564,
+      "mean_symbol_nll_ci_lower": 17.570145345641198,
+      "mean_symbol_nll_ci_upper": 17.61816907047043,
+      "mean_symbol_top1_accuracy": 0.04488858081741631,
+      "mean_symbol_topk_accuracy": 0.04488858081741631,
+      "mean_symbol_topk_accuracy_ci_lower": 0.043603024234955844,
+      "mean_symbol_topk_accuracy_ci_upper": 0.04626270794824399,
+      "run_dir": "outputs/runs/20260407T150327Z_omniglot_paper_pack_evaluation"
+    },
+    {
+      "condition": "B. Fixed Transcript + Calibrated Posterior",
+      "dataset": "omniglot_character_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.9250231053604435,
+      "mean_symbol_ece_ci_lower": 0.9234631726227153,
+      "mean_symbol_ece_ci_upper": 0.9266661532142124,
+      "mean_symbol_nll": 17.039555304624155,
+      "mean_symbol_nll_ci_lower": 17.00703702418525,
+      "mean_symbol_nll_ci_upper": 17.07112777068926,
+      "mean_symbol_top1_accuracy": 0.07497689463955638,
+      "mean_symbol_topk_accuracy": 0.07497689463955638,
+      "mean_symbol_topk_accuracy_ci_lower": 0.07337235571986034,
+      "mean_symbol_topk_accuracy_ci_upper": 0.07678681454097351,
+      "run_dir": "outputs/runs/20260407T150327Z_omniglot_paper_pack_evaluation"
+    },
+    {
+      "condition": "C. Uncertainty-Aware + Heuristic Posterior",
+      "dataset": "omniglot_character_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.460907054754343,
+      "mean_symbol_ece_ci_lower": 0.45988550268063116,
+      "mean_symbol_ece_ci_upper": 0.4618638711454795,
+      "mean_symbol_nll": 16.764319414186136,
+      "mean_symbol_nll_ci_lower": 16.733892021731023,
+      "mean_symbol_nll_ci_upper": 16.794907117695306,
+      "mean_symbol_top1_accuracy": 0.04488858081741631,
+      "mean_symbol_topk_accuracy": 0.09773567467652494,
+      "mean_symbol_topk_accuracy_ci_lower": 0.09595078558225509,
+      "mean_symbol_topk_accuracy_ci_upper": 0.09951382470733211,
+      "run_dir": "outputs/runs/20260407T150327Z_omniglot_paper_pack_evaluation"
+    },
+    {
+      "condition": "D. Uncertainty-Aware + Calibrated Posterior",
+      "dataset": "omniglot_character_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.5459861174362689,
+      "mean_symbol_ece_ci_lower": 0.5446903290001337,
+      "mean_symbol_ece_ci_upper": 0.5473122514666735,
+      "mean_symbol_nll": 15.954215781775593,
+      "mean_symbol_nll_ci_lower": 15.921442784021162,
+      "mean_symbol_nll_ci_upper": 15.987833758283207,
+      "mean_symbol_top1_accuracy": 0.07497689463955638,
+      "mean_symbol_topk_accuracy": 0.1447165742452249,
+      "mean_symbol_topk_accuracy_ci_lower": 0.14271346785787636,
+      "mean_symbol_topk_accuracy_ci_upper": 0.146732516943931,
+      "run_dir": "outputs/runs/20260407T150327Z_omniglot_paper_pack_evaluation"
+    },
+    {
+      "condition": "A. Fixed Transcript + Heuristic Posterior",
+      "dataset": "sklearn_digits_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.5699195171026157,
+      "mean_symbol_ece_ci_lower": 0.5598591549295774,
+      "mean_symbol_ece_ci_upper": 0.5797325620389,
+      "mean_symbol_nll": 10.498305474294787,
+      "mean_symbol_nll_ci_lower": 10.30372081854881,
+      "mean_symbol_nll_ci_upper": 10.691423023509344,
+      "mean_symbol_top1_accuracy": 0.4300804828973844,
+      "mean_symbol_topk_accuracy": 0.4300804828973844,
+      "mean_symbol_topk_accuracy_ci_lower": 0.42069081153588195,
+      "mean_symbol_topk_accuracy_ci_upper": 0.44006958417169684,
+      "run_dir": "outputs/runs/20260407T191829Z_sklearn_digits_paper_pack_evaluation"
+    },
+    {
+      "condition": "B. Fixed Transcript + Calibrated Posterior",
+      "dataset": "sklearn_digits_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.6512407780013415,
+      "mean_symbol_ece_ci_lower": 0.6417546948356807,
+      "mean_symbol_ece_ci_upper": 0.6587064050972501,
+      "mean_symbol_nll": 11.99629845900587,
+      "mean_symbol_nll_ci_lower": 11.84495483787011,
+      "mean_symbol_nll_ci_upper": 12.138376144153726,
+      "mean_symbol_top1_accuracy": 0.3487592219986586,
+      "mean_symbol_topk_accuracy": 0.3487592219986586,
+      "mean_symbol_topk_accuracy_ci_lower": 0.34037558685446007,
+      "mean_symbol_topk_accuracy_ci_upper": 0.3573105298457411,
+      "run_dir": "outputs/runs/20260407T191829Z_sklearn_digits_paper_pack_evaluation"
+    },
+    {
+      "condition": "C. Uncertainty-Aware + Heuristic Posterior",
+      "dataset": "sklearn_digits_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.3711553880336278,
+      "mean_symbol_ece_ci_lower": 0.3662823157562072,
+      "mean_symbol_ece_ci_upper": 0.37540200221476244,
+      "mean_symbol_nll": 2.8818125247541744,
+      "mean_symbol_nll_ci_lower": 2.757103160253795,
+      "mean_symbol_nll_ci_upper": 3.001987516601166,
+      "mean_symbol_top1_accuracy": 0.4300804828973844,
+      "mean_symbol_topk_accuracy": 0.9039235412474849,
+      "mean_symbol_topk_accuracy_ci_lower": 0.8965459423205902,
+      "mean_symbol_topk_accuracy_ci_upper": 0.910638832997988,
+      "run_dir": "outputs/runs/20260407T191829Z_sklearn_digits_paper_pack_evaluation"
+    },
+    {
+      "condition": "D. Uncertainty-Aware + Calibrated Posterior",
+      "dataset": "sklearn_digits_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.6374946697529623,
+      "mean_symbol_ece_ci_lower": 0.629587392229391,
+      "mean_symbol_ece_ci_upper": 0.6451467002845792,
+      "mean_symbol_nll": 9.389185062982826,
+      "mean_symbol_nll_ci_lower": 9.248688173334772,
+      "mean_symbol_nll_ci_upper": 9.534395520623452,
+      "mean_symbol_top1_accuracy": 0.3487592219986586,
+      "mean_symbol_topk_accuracy": 0.7146210596914823,
+      "mean_symbol_topk_accuracy_ci_lower": 0.7032193158953722,
+      "mean_symbol_topk_accuracy_ci_upper": 0.7251844399731723,
+      "run_dir": "outputs/runs/20260407T191829Z_sklearn_digits_paper_pack_evaluation"
+    },
+    {
+      "condition": "A. Fixed Transcript + Heuristic Posterior",
+      "dataset": "kuzushiji49_balanced_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.5481632653061225,
+      "mean_symbol_ece_ci_lower": 0.5403690476190476,
+      "mean_symbol_ece_ci_upper": 0.5556853741496599,
+      "mean_symbol_nll": 10.097540505766545,
+      "mean_symbol_nll_ci_lower": 9.950926924335086,
+      "mean_symbol_nll_ci_upper": 10.259254032977909,
+      "mean_symbol_top1_accuracy": 0.45183673469387753,
+      "mean_symbol_topk_accuracy": 0.45183673469387753,
+      "mean_symbol_topk_accuracy_ci_lower": 0.4435952380952381,
+      "mean_symbol_topk_accuracy_ci_upper": 0.4598639455782313,
+      "run_dir": "outputs/runs/20260407T201933Z_kuzushiji49_balanced_subset_paper_pack_evaluation"
+    },
+    {
+      "condition": "B. Fixed Transcript + Calibrated Posterior",
+      "dataset": "kuzushiji49_balanced_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.46340136054421766,
+      "mean_symbol_ece_ci_lower": 0.4555425170068027,
+      "mean_symbol_ece_ci_upper": 0.471156462585034,
+      "mean_symbol_nll": 8.5361685188982,
+      "mean_symbol_nll_ci_lower": 8.401302820594264,
+      "mean_symbol_nll_ci_upper": 8.688452411919208,
+      "mean_symbol_top1_accuracy": 0.5365986394557823,
+      "mean_symbol_topk_accuracy": 0.5365986394557823,
+      "mean_symbol_topk_accuracy_ci_lower": 0.5288435374149659,
+      "mean_symbol_topk_accuracy_ci_upper": 0.5439166666666666,
+      "run_dir": "outputs/runs/20260407T201933Z_kuzushiji49_balanced_subset_paper_pack_evaluation"
+    },
+    {
+      "condition": "C. Uncertainty-Aware + Heuristic Posterior",
+      "dataset": "kuzushiji49_balanced_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.416944875623654,
+      "mean_symbol_ece_ci_lower": 0.4143726018152228,
+      "mean_symbol_ece_ci_upper": 0.41962173975381656,
+      "mean_symbol_nll": 6.220571510511291,
+      "mean_symbol_nll_ci_lower": 6.090539169720727,
+      "mean_symbol_nll_ci_upper": 6.351326236822374,
+      "mean_symbol_top1_accuracy": 0.45183673469387753,
+      "mean_symbol_topk_accuracy": 0.7052380952380952,
+      "mean_symbol_topk_accuracy_ci_lower": 0.6973078231292518,
+      "mean_symbol_topk_accuracy_ci_upper": 0.7118758503401361,
+      "run_dir": "outputs/runs/20260407T201933Z_kuzushiji49_balanced_subset_paper_pack_evaluation"
+    },
+    {
+      "condition": "D. Uncertainty-Aware + Calibrated Posterior",
+      "dataset": "kuzushiji49_balanced_crops",
+      "mean_family_topk_accuracy": null,
+      "mean_family_topk_accuracy_ci_lower": null,
+      "mean_family_topk_accuracy_ci_upper": null,
+      "mean_symbol_ece": 0.37309680753859126,
+      "mean_symbol_ece_ci_lower": 0.37004690804943624,
+      "mean_symbol_ece_ci_upper": 0.37619789203400805,
+      "mean_symbol_nll": 4.8603096366657015,
+      "mean_symbol_nll_ci_lower": 4.743534420106908,
+      "mean_symbol_nll_ci_upper": 4.967270649346682,
+      "mean_symbol_top1_accuracy": 0.5365986394557823,
+      "mean_symbol_topk_accuracy": 0.7727891156462585,
+      "mean_symbol_topk_accuracy_ci_lower": 0.766734693877551,
+      "mean_symbol_topk_accuracy_ci_upper": 0.7792874149659863,
+      "run_dir": "outputs/runs/20260407T201933Z_kuzushiji49_balanced_subset_paper_pack_evaluation"
+    }
+  ],
+  "failure_rows": [
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 570,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 11757,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 95,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 15792,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 32,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 14735,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 19,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 7001,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 12825,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 15840,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 8757,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 17856,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 6505,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 15241,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 4515,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 2379,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 4290,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 3336,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 567,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 378,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 340,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 220,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 236,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 183,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 4290,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 3336,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 567,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 378,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 340,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 220,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 236,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 183,
+      "dataset": "omniglot_character_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 30,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 93,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 401,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 1190,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 183,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 1286,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 77,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 1316,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 3,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 135,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 3,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 840,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 1128,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 1254,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 81,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 174,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 732,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 798,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 698,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 964,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 671,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 890,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 81,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 174,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 732,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.15,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 798,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 698,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.3,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 964,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 671,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 890,
+      "dataset": "sklearn_digits_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 264,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 3140,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "fixed",
+      "count": 790,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "calibration_worsened_or_unstable",
+      "condition_group": "uncertainty",
+      "count": 4296,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 1534,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 3716,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_calibrated",
+      "count": 3030,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "overdiffuse_posterior",
+      "condition_group": "uncertainty_heuristic",
+      "count": 4142,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 1626,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 1758,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_calibrated",
+      "count": 1846,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "top1_collapse_but_topk_rescue",
+      "condition_group": "uncertainty_heuristic",
+      "count": 1967,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 1626,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.0,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 1758,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "calibrated_classifier",
+      "count": 1846,
+      "dataset": "kuzushiji49_balanced_crops"
+    },
+    {
+      "ambiguity_level": 0.45,
+      "case_type": "uncertainty_helped_symbols_not_downstream",
+      "condition_group": "cluster_distance",
+      "count": 1967,
+      "dataset": "kuzushiji49_balanced_crops"
+    }
+  ],
+  "summary_rows": [
+    {
+      "a_fixed_heuristic_topk": 0.04488858081741631,
+      "b_fixed_calibrated_topk": 0.07497689463955638,
+      "c_uncertainty_heuristic_topk": 0.09773567467652494,
+      "calibrated_uncertainty_topk_delta_mean": 0.06973967960566851,
+      "combined_ece_delta_mean": -0.4091253017463145,
+      "combined_nll_delta_mean": -1.6395867458896527,
+      "combined_topk_delta_mean": 0.09982799342780858,
+      "d_uncertainty_calibrated_topk": 0.1447165742452249,
+      "dataset": "omniglot_character_crops",
+      "dataset_name": "omniglot_character_crops",
+      "family_signal_available": 0.0,
+      "fixed_calibration_topk_delta_mean": 0.03008831382214006,
+      "heuristic_uncertainty_topk_delta_mean": 0.05284709385910864,
+      "record_count": 32460,
+      "run_dir": "outputs/runs/20260407T150327Z_omniglot_paper_pack_evaluation",
+      "sequence_count": 32460,
+      "train_group_count": 50,
+      "train_symbol_class_count": 1623,
+      "uncertainty_calibration_topk_delta_mean": 0.04698089956869994
+    },
+    {
+      "a_fixed_heuristic_topk": 0.4300804828973844,
+      "b_fixed_calibrated_topk": 0.3487592219986586,
+      "c_uncertainty_heuristic_topk": 0.9039235412474849,
+      "calibrated_uncertainty_topk_delta_mean": 0.3658618376928236,
+      "combined_ece_delta_mean": 0.0675751526503447,
+      "combined_nll_delta_mean": -1.1091204113119502,
+      "combined_topk_delta_mean": 0.2845405767940979,
+      "d_uncertainty_calibrated_topk": 0.7146210596914823,
+      "dataset": "sklearn_digits_crops",
+      "dataset_name": "sklearn_digits_crops",
+      "family_signal_available": 0.0,
+      "fixed_calibration_topk_delta_mean": -0.08132126089872568,
+      "heuristic_uncertainty_topk_delta_mean": 0.47384305835010065,
+      "record_count": 1797,
+      "run_dir": "outputs/runs/20260407T191829Z_sklearn_digits_paper_pack_evaluation",
+      "sequence_count": 1797,
+      "train_group_count": 0,
+      "train_symbol_class_count": 10,
+      "uncertainty_calibration_topk_delta_mean": -0.18930248155600268
+    },
+    {
+      "a_fixed_heuristic_topk": 0.45183673469387753,
+      "b_fixed_calibrated_topk": 0.5365986394557823,
+      "c_uncertainty_heuristic_topk": 0.7052380952380952,
+      "calibrated_uncertainty_topk_delta_mean": 0.23619047619047617,
+      "combined_ece_delta_mean": -0.17506645776753038,
+      "combined_nll_delta_mean": -5.237230869100843,
+      "combined_topk_delta_mean": 0.320952380952381,
+      "d_uncertainty_calibrated_topk": 0.7727891156462585,
+      "dataset": "kuzushiji49_balanced_crops",
+      "dataset_name": "kuzushiji49_balanced_crops",
+      "family_signal_available": 0.0,
+      "fixed_calibration_topk_delta_mean": 0.08476190476190479,
+      "heuristic_uncertainty_topk_delta_mean": 0.2534013605442177,
+      "record_count": 22050,
+      "run_dir": "outputs/runs/20260407T201933Z_kuzushiji49_balanced_subset_paper_pack_evaluation",
+      "sequence_count": 22050,
+      "train_group_count": 0,
+      "train_symbol_class_count": 49,
+      "uncertainty_calibration_topk_delta_mean": 0.0675510204081633
+    }
+  ]
+}
