@@ -15,6 +15,13 @@ data/processed/
 data/synthetic/generated/
 outputs/runs/
 outputs/sequence_*
+paper/das/**/__pycache__/
+paper/das/**/*.aux
+paper/das/**/*.bbl
+paper/das/**/*.blg
+paper/das/**/*.log
+paper/das/**/*.out
+paper/das/**/*.synctex.gz
 
 # Keep raw source datasets out of Git while preserving lightweight notes.
 data/raw/**

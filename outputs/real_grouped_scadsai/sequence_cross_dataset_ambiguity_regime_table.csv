@@ -1,0 +1,7 @@
+dataset,task_name,posterior_strategy_requested,ambiguity_regime,mean_uncertainty_sequence_exact_delta,mean_uncertainty_sequence_topk_delta,mean_conformal_sequence_exact_delta,mean_conformal_coverage_delta,mean_uncertainty_family_delta,mean_conformal_family_delta,mean_trigram_sequence_exact_delta,mean_trigram_family_delta,mean_crf_sequence_exact_delta,mean_crf_family_delta,mean_conformal_trigram_family_delta,mean_conformal_crf_family_delta
+scadsai_real_grouped,real_grouped_manifest_sequences,cluster_distance,high,0.1111111111111111,0.38888888888888884,-0.05555555555555555,-0.12222222222222212,,,-0.16666666666666666,,0.0,,,
+scadsai_real_grouped,real_grouped_manifest_sequences,cluster_distance,low,0.11111111111111113,0.33333333333333337,-0.05555555555555558,-0.11527777777777781,,,-0.22222222222222224,,0.0,,,
+scadsai_real_grouped,real_grouped_manifest_sequences,cluster_distance,medium,0.1111111111111111,0.3888888888888889,0.0,-0.12222222222222212,,,-0.16666666666666666,,0.0,,,
+scadsai_real_grouped,real_grouped_manifest_sequences,calibrated_classifier,high,-0.05555555555555555,0.2777777777777778,0.0,-0.03888888888888886,,,-0.05555555555555555,,0.0,,,
+scadsai_real_grouped,real_grouped_manifest_sequences,calibrated_classifier,low,-0.11111111111111109,0.25000000000000006,0.0,-0.00694444444444442,,,-0.055555555555555566,,0.0,,,
+scadsai_real_grouped,real_grouped_manifest_sequences,calibrated_classifier,medium,0.1111111111111111,0.2222222222222222,0.0,-0.01388888888888884,,,-0.2222222222222222,,0.0,,,

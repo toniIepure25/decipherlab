@@ -11,9 +11,12 @@ from decipherlab.config import DecipherLabConfig, dump_config, load_config
 from decipherlab.decoding.beam_search import (
     BeamDecodingResult,
     BigramTransitionModel,
+    TrigramTransitionModel,
     beam_decode_confusion_network,
     greedy_decode_confusion_network,
+    trigram_beam_decode_confusion_network,
 )
+from decipherlab.decoding.crf import crf_viterbi_decode_confusion_network
 from decipherlab.evaluation.metrics import (
     symbol_case_breakdown,
     symbol_expected_calibration_error,
@@ -31,6 +34,7 @@ from decipherlab.sequence.family_identification import (
 )
 from decipherlab.sequence.failure_analysis import build_sequence_failure_cases
 from decipherlab.sequence.metrics import sequence_metric_bundle
+from decipherlab.sequence.real_downstream import build_real_downstream_resource, downstream_payload
 from decipherlab.sequence.results_pack import (
     build_ambiguity_regime_rows,
     build_pairwise_effect_rows,
@@ -81,7 +85,8 @@ def _decode_method_result(
     method: str,
     posterior: TranscriptionPosterior,
     network,
-    transition_model: BigramTransitionModel,
+    bigram_transition_model: BigramTransitionModel,
+    trigram_transition_model: TrigramTransitionModel | None,
     config: DecipherLabConfig,
 ) -> tuple[BeamDecodingResult, TranscriptionPosterior, Any]:
     if method == "fixed_greedy":
@@ -95,11 +100,38 @@ def _decode_method_result(
         return (
             beam_decode_confusion_network(
                 network=network,
-                transition_model=transition_model,
+                transition_model=bigram_transition_model,
                 beam_width=config.decoding.beam_width,
                 lm_weight=config.decoding.lm_weight,
                 top_k_sequences=config.decoding.top_k_sequences,
                 length_normalize=config.decoding.length_normalize,
+            ),
+            posterior,
+            network,
+        )
+    if method == "uncertainty_trigram_beam":
+        if trigram_transition_model is None:
+            raise ValueError("Trigram decoding requested but no trigram transition model is available.")
+        return (
+            trigram_beam_decode_confusion_network(
+                network=network,
+                transition_model=trigram_transition_model,
+                beam_width=config.decoding.beam_width,
+                lm_weight=config.decoding.lm_weight
+                if config.decoding.trigram_lm_weight is None
+                else config.decoding.trigram_lm_weight,
+                top_k_sequences=config.decoding.top_k_sequences,
+                length_normalize=config.decoding.length_normalize,
+            ),
+            posterior,
+            network,
+        )
+    if method == "uncertainty_crf_viterbi":
+        return (
+            crf_viterbi_decode_confusion_network(
+                network=network,
+                transition_model=bigram_transition_model,
+                lm_weight=config.decoding.lm_weight,
             ),
             posterior,
             network,
@@ -144,6 +176,33 @@ def _aggregate_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "family_identification_accuracy": float(np.mean([item["family_identification_accuracy"] for item in items if item["family_identification_accuracy"] is not None]))
                 if any(item["family_identification_accuracy"] is not None for item in items)
                 else None,
+                "family_identification_topk_recovery": float(np.mean([item["family_identification_topk_recovery"] for item in items if item["family_identification_topk_recovery"] is not None]))
+                if any(item["family_identification_topk_recovery"] is not None for item in items)
+                else None,
+                "real_downstream_bank_coverage": float(np.mean([item["real_downstream_bank_coverage"] for item in items if item["real_downstream_bank_coverage"] is not None]))
+                if any(item.get("real_downstream_bank_coverage") is not None for item in items)
+                else None,
+                "real_downstream_bank_size": float(np.mean([item["real_downstream_bank_size"] for item in items if item["real_downstream_bank_size"] is not None]))
+                if any(item.get("real_downstream_bank_size") is not None for item in items)
+                else None,
+                "real_downstream_exact_match": float(np.mean([item["real_downstream_exact_match"] for item in items if item["real_downstream_exact_match"] is not None]))
+                if any(item.get("real_downstream_exact_match") is not None for item in items)
+                else None,
+                "real_downstream_topk_recovery": float(np.mean([item["real_downstream_topk_recovery"] for item in items if item["real_downstream_topk_recovery"] is not None]))
+                if any(item.get("real_downstream_topk_recovery") is not None for item in items)
+                else None,
+                "real_downstream_token_accuracy": float(np.mean([item["real_downstream_token_accuracy"] for item in items if item["real_downstream_token_accuracy"] is not None]))
+                if any(item.get("real_downstream_token_accuracy") is not None for item in items)
+                else None,
+                "real_downstream_cer": float(np.mean([item["real_downstream_cer"] for item in items if item["real_downstream_cer"] is not None]))
+                if any(item.get("real_downstream_cer") is not None for item in items)
+                else None,
+                "real_downstream_exact_match_if_covered": float(np.mean([item["real_downstream_exact_match_if_covered"] for item in items if item["real_downstream_exact_match_if_covered"] is not None]))
+                if any(item.get("real_downstream_exact_match_if_covered") is not None for item in items)
+                else None,
+                "real_downstream_topk_recovery_if_covered": float(np.mean([item["real_downstream_topk_recovery_if_covered"] for item in items if item["real_downstream_topk_recovery_if_covered"] is not None]))
+                if any(item.get("real_downstream_topk_recovery_if_covered") is not None for item in items)
+                else None,
                 "sequence_count": len(items),
                 "labeled_symbol_count": int(sum(item["labeled_symbol_count"] for item in items)),
             }
@@ -152,6 +211,7 @@ def _aggregate_rows(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def _build_report(summary_rows: list[dict[str, Any]], benchmark_metadata: dict[str, Any]) -> str:
+    synthetic_from_real = bool(benchmark_metadata["synthetic_from_real"])
     lines = [
         "# Sequence Branch Report",
         "",
@@ -159,27 +219,30 @@ def _build_report(summary_rows: list[dict[str, Any]], benchmark_metadata: dict[s
         "",
         "## Benchmark",
         f"- Source dataset: `{benchmark_metadata['source_dataset_name']}`",
-        f"- Synthetic-from-real task: `{benchmark_metadata['task_name']}`",
+        f"- Task name: `{benchmark_metadata['task_name']}`",
+        f"- Synthetic-from-real: `{synthetic_from_real}`",
         f"- Selected symbols: `{len(benchmark_metadata['selected_symbols'])}`",
         f"- Sequence length: `{benchmark_metadata['sequence_length']}`",
+        f"- Real downstream task: `{benchmark_metadata.get('real_downstream_task_name', 'disabled')}`",
         "",
         "## Aggregated Results",
         "",
-        "| Ambiguity | Method | Seq exact | Seq token | Seq top-k | Seq CER | Symbol top-k | Set coverage | Set size | Family acc |",
-        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+        "| Ambiguity | Method | Seq exact | Seq token | Seq top-k | Downstream exact | Downstream top-k | Seq CER | Symbol top-k | Set coverage | Family acc |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for row in summary_rows:
         lines.append(
-            "| {ambiguity:.2f} | {method} | {exact:.3f} | {token:.3f} | {topk:.3f} | {cer:.3f} | {symbol_topk:.3f} | {coverage} | {set_size} | {family_acc} |".format(
+            "| {ambiguity:.2f} | {method} | {exact:.3f} | {token:.3f} | {topk:.3f} | {downstream_exact} | {downstream_topk} | {cer:.3f} | {symbol_topk:.3f} | {coverage} | {family_acc} |".format(
                 ambiguity=row["ambiguity_level"],
                 method=row["method"],
                 exact=row["sequence_exact_match"],
                 token=row["sequence_token_accuracy"],
                 topk=row["sequence_topk_recovery"],
+                downstream_exact="n/a" if row["real_downstream_exact_match"] is None else f"{row['real_downstream_exact_match']:.3f}",
+                downstream_topk="n/a" if row["real_downstream_topk_recovery"] is None else f"{row['real_downstream_topk_recovery']:.3f}",
                 cer=row["sequence_cer"],
                 symbol_topk=row["symbol_topk_accuracy"] or 0.0,
                 coverage="n/a" if row["prediction_set_coverage"] is None else f"{row['prediction_set_coverage']:.3f}",
-                set_size="n/a" if row["prediction_set_avg_size"] is None else f"{row['prediction_set_avg_size']:.3f}",
                 family_acc="n/a" if row["family_identification_accuracy"] is None else f"{row['family_identification_accuracy']:.3f}",
             )
         )
@@ -187,7 +250,11 @@ def _build_report(summary_rows: list[dict[str, Any]], benchmark_metadata: dict[s
         [
             "",
             "## Caveats",
-            "- Sequence-level claims in this branch are synthetic-from-real: real glyph crops are used, but transition structure is generated.",
+            (
+                "- Sequence-level claims in this branch are synthetic-from-real: real glyph crops are used, but transition structure is generated."
+                if synthetic_from_real
+                else "- Sequence-level claims here come from a real grouped manifest with OCR-derived token labels; they should be treated as preliminary grouped evidence."
+            ),
             "- Positive results here would support structured use of uncertainty under ambiguity, not semantic decipherment.",
         ]
     )
@@ -244,9 +311,22 @@ def run_sequence_branch_experiment(
         sequences=[[symbol for symbol in example.observed_symbols if symbol is not None] for example in train_examples],
         smoothing=resolved.decoding.transition_smoothing,
     )
+    trigram_transition_model = (
+        TrigramTransitionModel.fit(
+            sequences=[[symbol for symbol in example.observed_symbols if symbol is not None] for example in train_examples],
+            smoothing=resolved.decoding.transition_smoothing,
+        )
+        if "trigram_beam" in resolved.decoding.decoder_variants
+        else None
+    )
     family_classifier = ProcessFamilyClassifier.fit(
         train_examples,
         smoothing=resolved.decoding.transition_smoothing,
+    )
+    downstream_resource = (
+        build_real_downstream_resource(train_examples, resolved.real_downstream)
+        if resolved.real_downstream.enabled and benchmark.metadata["task_name"] == "real_grouped_manifest_sequences"
+        else None
     )
 
     per_sequence_rows: list[dict[str, Any]] = []
@@ -305,31 +385,62 @@ def run_sequence_branch_experiment(
                 _sequence_labels(validation_examples),
                 resolved.risk_control,
             )
-        methods = ["fixed_greedy", "uncertainty_beam"]
-        if conformal_predictor is not None:
-            methods.append("conformal_beam")
+        methods = ["fixed_greedy"]
+        if "bigram_beam" in resolved.decoding.decoder_variants:
+            methods.append("uncertainty_beam")
+            if conformal_predictor is not None:
+                methods.append("conformal_beam")
+        if "trigram_beam" in resolved.decoding.decoder_variants:
+            methods.append("uncertainty_trigram_beam")
+            if conformal_predictor is not None:
+                methods.append("conformal_trigram_beam")
+        if "crf_viterbi" in resolved.decoding.decoder_variants:
+            methods.append("uncertainty_crf_viterbi")
+            if conformal_predictor is not None:
+                methods.append("conformal_crf_viterbi")
 
         for example, posterior, network in zip(ambiguous_evaluation, evaluation_posteriors, evaluation_networks):
             for method in methods:
                 active_network = network
                 active_posterior = posterior
-                if method == "conformal_beam":
+                if method in {"conformal_beam", "conformal_trigram_beam", "conformal_crf_viterbi"}:
                     active_network = conformal_predictor.apply(network, resolved.risk_control)
                     active_posterior = confusion_network_to_posterior(active_network)
-                    decoded = beam_decode_confusion_network(
-                        network=active_network,
-                        transition_model=transition_model,
-                        beam_width=resolved.decoding.beam_width,
-                        lm_weight=resolved.decoding.lm_weight,
-                        top_k_sequences=resolved.decoding.top_k_sequences,
-                        length_normalize=resolved.decoding.length_normalize,
-                    )
+                    if method == "conformal_beam":
+                        decoded = beam_decode_confusion_network(
+                            network=active_network,
+                            transition_model=transition_model,
+                            beam_width=resolved.decoding.beam_width,
+                            lm_weight=resolved.decoding.lm_weight,
+                            top_k_sequences=resolved.decoding.top_k_sequences,
+                            length_normalize=resolved.decoding.length_normalize,
+                        )
+                    elif method == "conformal_crf_viterbi":
+                        decoded = crf_viterbi_decode_confusion_network(
+                            network=active_network,
+                            transition_model=transition_model,
+                            lm_weight=resolved.decoding.lm_weight,
+                        )
+                    else:
+                        if trigram_transition_model is None:
+                            raise ValueError("Conformal trigram decoding requested without a trigram model.")
+                        decoded = trigram_beam_decode_confusion_network(
+                            network=active_network,
+                            transition_model=trigram_transition_model,
+                            beam_width=resolved.decoding.beam_width,
+                            lm_weight=resolved.decoding.lm_weight
+                            if resolved.decoding.trigram_lm_weight is None
+                            else resolved.decoding.trigram_lm_weight,
+                            top_k_sequences=resolved.decoding.top_k_sequences,
+                            length_normalize=resolved.decoding.length_normalize,
+                        )
                 else:
                     decoded, active_posterior, active_network = _decode_method_result(
                         method=method,
                         posterior=posterior,
                         network=network,
-                        transition_model=transition_model,
+                        bigram_transition_model=transition_model,
+                        trigram_transition_model=trigram_transition_model,
                         config=resolved,
                     )
                 sequence_metrics = sequence_metric_bundle(
@@ -340,6 +451,33 @@ def run_sequence_branch_experiment(
                     family_classifier,
                     decoded.best.symbols if decoded.sequences else [],
                     example.family,
+                )
+                downstream_metrics = (
+                    downstream_payload(
+                        method=method,
+                        decoded=decoded,
+                        posterior=active_posterior,
+                        truth=example.observed_symbols,
+                        downstream_resource=downstream_resource,
+                        real_downstream_config=resolved.real_downstream,
+                        decoding_config=resolved.decoding,
+                        bigram_transition_model=transition_model,
+                        trigram_transition_model=trigram_transition_model,
+                    )
+                    if downstream_resource is not None
+                    else {
+                        "real_downstream_supported": False,
+                        "real_downstream_task_name": None,
+                        "real_downstream_bank_size": None,
+                        "real_downstream_bank_coverage": None,
+                        "real_downstream_exact_match": None,
+                        "real_downstream_topk_recovery": None,
+                        "real_downstream_token_accuracy": None,
+                        "real_downstream_cer": None,
+                        "real_downstream_exact_match_if_covered": None,
+                        "real_downstream_topk_recovery_if_covered": None,
+                        "real_downstream_best_transcript": [],
+                    }
                 )
                 set_metrics = summarize_prediction_sets([active_network], [example.observed_symbols])
                 symbol_top1 = symbol_top_k_accuracy(active_posterior, example.observed_symbols, top_k=1)
@@ -355,6 +493,8 @@ def run_sequence_branch_experiment(
                         "posterior_strategy_requested": posterior_strategy,
                         "task_name": benchmark.metadata["task_name"],
                         "dataset_name": benchmark.metadata["source_dataset_name"],
+                        "true_family": example.family,
+                        "sequence_length": example.sequence_length,
                         **sequence_metrics,
                         "symbol_top1_accuracy": symbol_top1[0],
                         "symbol_topk_accuracy": symbol_topk[0],
@@ -365,7 +505,18 @@ def run_sequence_branch_experiment(
                         "prediction_set_singleton_rate": set_metrics["prediction_set_singleton_rate"],
                         "prediction_set_rescue_rate": set_metrics["prediction_set_rescue_rate"],
                         "family_identification_accuracy": family_metrics["family_identification_accuracy"],
+                        "family_identification_topk_recovery": family_metrics["family_identification_topk_recovery"],
                         "predicted_family": family_metrics["predicted_family"],
+                        "real_downstream_supported": downstream_metrics["real_downstream_supported"],
+                        "real_downstream_task_name": downstream_metrics["real_downstream_task_name"],
+                        "real_downstream_bank_size": downstream_metrics["real_downstream_bank_size"],
+                        "real_downstream_bank_coverage": downstream_metrics["real_downstream_bank_coverage"],
+                        "real_downstream_exact_match": downstream_metrics["real_downstream_exact_match"],
+                        "real_downstream_topk_recovery": downstream_metrics["real_downstream_topk_recovery"],
+                        "real_downstream_token_accuracy": downstream_metrics["real_downstream_token_accuracy"],
+                        "real_downstream_cer": downstream_metrics["real_downstream_cer"],
+                        "real_downstream_exact_match_if_covered": downstream_metrics["real_downstream_exact_match_if_covered"],
+                        "real_downstream_topk_recovery_if_covered": downstream_metrics["real_downstream_topk_recovery_if_covered"],
                         "labeled_symbol_count": symbol_top1[1],
                         "mean_confusion_entropy": active_network.mean_entropy(),
                         "mean_confusion_set_size": active_network.average_set_size(),
@@ -398,6 +549,11 @@ def run_sequence_branch_experiment(
         "source_manifest": benchmark.metadata["source_manifest"],
         "synthetic_from_real": benchmark.metadata["synthetic_from_real"],
         "family_signal_available": family_classifier is not None,
+        "real_downstream_enabled": downstream_resource is not None,
+        "real_downstream_task_name": None if downstream_resource is None else resolved.real_downstream.task_name,
+        "real_downstream_bank_length_count": 0
+        if downstream_resource is None
+        else int(downstream_resource.metadata.get("length_count", downstream_resource.metadata.get("inventory_size", 0))),
         "best_ambiguity_regime_by_strategy": best_regime,
     }
 

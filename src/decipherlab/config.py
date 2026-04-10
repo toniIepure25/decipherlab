@@ -121,6 +121,7 @@ class SequenceBenchmarkConfig(BaseModel):
     task_name: Literal[
         "real_glyph_markov_sequences",
         "real_glyph_process_family_sequences",
+        "real_grouped_manifest_sequences",
     ] = "real_glyph_markov_sequences"
     selected_symbol_count: int = Field(default=8, ge=2)
     min_instances_per_symbol: int = Field(default=12, ge=2)
@@ -141,6 +142,8 @@ class SequenceBenchmarkConfig(BaseModel):
     )
     motif_length: int = Field(default=3, ge=2)
     motif_noise_probability: float = Field(default=0.1, ge=0.0, le=1.0)
+    minimum_real_sequence_length: int = Field(default=4, ge=2)
+    maximum_real_sequence_length: int | None = Field(default=None, ge=2)
 
 
 class StructuredUncertaintyConfig(BaseModel):
@@ -159,8 +162,12 @@ class DecodingConfig(BaseModel):
 
     enabled: bool = False
     strategy: Literal["bigram_beam"] = "bigram_beam"
+    decoder_variants: list[Literal["bigram_beam", "trigram_beam", "crf_viterbi"]] = Field(
+        default_factory=lambda: ["bigram_beam"]
+    )
     beam_width: int = Field(default=8, ge=1)
     lm_weight: float = Field(default=1.0, ge=0.0)
+    trigram_lm_weight: float | None = Field(default=None, ge=0.0)
     transition_smoothing: float = Field(default=0.1, gt=0.0)
     top_k_sequences: int = Field(default=5, ge=1)
     length_normalize: bool = True
@@ -175,6 +182,23 @@ class RiskControlConfig(BaseModel):
     min_set_size: int = Field(default=1, ge=1)
     max_set_size: int | None = Field(default=None, ge=1)
     include_top1_fallback: bool = True
+
+
+class RealDownstreamConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    task_name: Literal[
+        "train_transcript_bank",
+        "train_supported_ngram_path",
+        "train_supported_trigram_path",
+    ] = "train_transcript_bank"
+    transcript_top_k: int = Field(default=5, ge=1)
+    min_frequency: int = Field(default=1, ge=1)
+    exact_length_only: bool = True
+    missing_log_probability: float = Field(default=1.0e-8, gt=0.0)
+    ngram_order: int = Field(default=3, ge=2)
+    min_supported_ngrams: int = Field(default=1, ge=1)
 
 
 class DecipherLabConfig(BaseModel):
@@ -192,6 +216,7 @@ class DecipherLabConfig(BaseModel):
     structured_uncertainty: StructuredUncertaintyConfig = Field(default_factory=StructuredUncertaintyConfig)
     decoding: DecodingConfig = Field(default_factory=DecodingConfig)
     risk_control: RiskControlConfig = Field(default_factory=RiskControlConfig)
+    real_downstream: RealDownstreamConfig = Field(default_factory=RealDownstreamConfig)
 
 
 def load_config(path: str | Path) -> DecipherLabConfig:

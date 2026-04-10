@@ -109,8 +109,13 @@ structured_uncertainty:
 decoding:
   enabled: true
   strategy: bigram_beam
+  decoder_variants:
+    - bigram_beam
+    - trigram_beam
+    - crf_viterbi
   beam_width: 12
   lm_weight: 1.2
+  trigram_lm_weight: 1.2
   transition_smoothing: 0.1
   top_k_sequences: 5
   length_normalize: true

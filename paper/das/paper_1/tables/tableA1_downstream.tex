@@ -1,0 +1,20 @@
+\begin{table*}[t]
+\caption{Redesigned real downstream summary. The task is substantially better covered than exact transcript-bank recovery, but exact gains remain selective across corpora and posterior families.}
+\label{tab:appendix_downstream}
+\centering
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{|l|l|c|c|c|c|c|}
+\hline
+\textbf{Dataset} & \textbf{Posterior family} & \textbf{Coverage} & \textbf{Fixed exact} & \textbf{Uncertainty exact} & \textbf{Raw exact delta} & \textbf{Conformal exact delta} \\
+\hline
+Historical Newspapers & Cluster distance & 0.878 & 0.639 & 0.514 & -0.125 & 0.222 \\
+\hline
+Historical Newspapers & Calibrated classifier & 0.878 & 0.819 & 0.764 & -0.056 & 0.056 \\
+\hline
+ScaDS.AI & Cluster distance & 1.000 & 0.125 & 0.236 & 0.111 & -0.042 \\
+\hline
+ScaDS.AI & Calibrated classifier & 1.000 & 0.278 & 0.236 & -0.042 & 0.000 \\
+\hline
+\end{tabular}%
+}
+\end{table*}

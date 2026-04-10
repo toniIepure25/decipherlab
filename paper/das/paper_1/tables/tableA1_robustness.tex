@@ -1,0 +1,25 @@
+\begin{table*}[t]
+\caption{Bootstrap support for the main reviewer-facing claims.}
+\label{tab:appendix_robustness}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{4pt}
+\renewcommand{\arraystretch}{1.06}
+\begin{tabular}{|p{5.2cm}|c|c|c|c|}
+\hline
+\textbf{Claim} & \textbf{Mean} & \textbf{CI low} & \textbf{CI high} & \textbf{$P(\Delta > 0)$} \\
+\hline
+Two-corpus real grouped top-k delta, raw uncertainty & 0.181 & 0.122 & 0.236 & 1.000 \\
+\hline
+Historical Newspapers grouped exact delta, conformal & 0.139 & 0.069 & 0.201 & 1.000 \\
+\hline
+Two-corpus real downstream exact delta, raw uncertainty & -0.028 & -0.073 & 0.017 & 0.100 \\
+\hline
+Two-corpus real downstream exact delta, conformal & 0.059 & 0.024 & 0.097 & 0.998 \\
+\hline
+Grouped rescue gap given symbol rescue & 0.085 & 0.072 & 0.099 & 1.000 \\
+\hline
+Downstream rescue gap given grouped rescue & 0.375 & 0.275 & 0.475 & 1.000 \\
+\hline
+\end{tabular}
+\end{table*}

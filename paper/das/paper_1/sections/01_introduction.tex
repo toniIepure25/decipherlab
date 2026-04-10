@@ -1,0 +1,11 @@
+\section{Introduction}
+
+Low-resource glyph and grouped recognition pipelines often collapse uncertainty too early. A common pattern is image to top-one transcript to higher-level reasoning. When that happens, correct alternatives may be discarded before grouped or structural constraints can act. This is especially costly under ambiguity, where grouped labels are scarce and local visual evidence is weak.
+
+This paper studies a bounded version of that problem. We do not ask whether preserved uncertainty solves decipherment, semantic recovery, or manuscript interpretation. We ask when preserved uncertainty becomes useful at higher levels of inference, and when it does not.
+
+Our central claim is narrow and evidence-bound: preserved transcription uncertainty improves real grouped top-k recovery across two token-aligned corpora, but higher-level propagation is support-gated. Grouped rescue predicts downstream success only in specific support regimes, and exact real downstream gains remain selective rather than replicated.
+
+The paper is built around three pieces of evidence. First, the stronger sequence branch extends earlier symbol-level uncertainty findings into grouped and downstream settings using synthetic-from-real tasks on Omniglot, scikit-learn Digits, and Kuzushiji-49. Second, it establishes a replicated real grouped result on Historical Newspapers and ScaDS.AI grouped words. Third, it replaces a coverage-limited real downstream task with a better-covered alternative and then explains why downstream propagation still remains mixed.
+
+The contribution is therefore analytical rather than architectural. The branch already contains beam, trigram, conformal, and CRF-style decoders, but the main paper insight is not that another decoder wins universally. The more useful finding is that grouped rescue is real, measurable, and replicated, while downstream propagation depends on support conditions instead of occurring automatically.

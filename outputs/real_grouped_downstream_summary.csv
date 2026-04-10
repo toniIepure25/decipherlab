@@ -1,0 +1,5 @@
+dataset,posterior_strategy_requested,mean_downstream_bank_coverage,mean_fixed_downstream_exact_match,mean_uncertainty_downstream_exact_match,mean_uncertainty_downstream_exact_delta,mean_uncertainty_downstream_topk_delta,mean_conformal_downstream_exact_delta,mean_grouped_topk_delta,mean_grouped_exact_delta,grouped_topk_without_downstream_exact_failures,symbol_without_downstream_failures
+historical_newspapers_real_grouped_gold,cluster_distance,0.0,0.0,0.0,0.0,0.0,0.0,0.05555555555555554,-0.12499999999999997,16,25
+historical_newspapers_real_grouped_gold,calibrated_classifier,0.0,0.0,0.0,0.0,0.0,0.0,0.05555555555555558,-0.055555555555555525,5,12
+scadsai_real_grouped,cluster_distance,0.1111111111111111,0.041666666666666664,0.041666666666666664,0.0,-0.041666666666666664,0.0,0.3611111111111111,0.11111111111111112,27,56
+scadsai_real_grouped,calibrated_classifier,0.1111111111111111,0.05555555555555555,0.05555555555555555,0.0,0.0,0.05555555555555555,0.25,-0.04166666666666666,18,47

@@ -216,6 +216,84 @@ def _source_pools_for_splits(
     }
 
 
+def _estimate_empirical_transition_matrix(
+    examples: list[SequenceExample],
+    labels: list[str],
+    smoothing: float,
+) -> dict[str, dict[str, float]]:
+    counts: dict[str, dict[str, float]] = {
+        left: {right: smoothing for right in labels}
+        for left in labels
+    }
+    for example in examples:
+        sequence = [symbol for symbol in example.observed_symbols if symbol in counts]
+        for left, right in zip(sequence[:-1], sequence[1:]):
+            counts[left][right] += 1.0
+    transition_matrix: dict[str, dict[str, float]] = {}
+    for left, row in counts.items():
+        total = sum(row.values())
+        transition_matrix[left] = {
+            right: value / total for right, value in row.items()
+        }
+    return transition_matrix
+
+
+def _build_real_grouped_sequence_examples(
+    source_dataset: DatasetCollection,
+    labels: list[str],
+    config: SequenceBenchmarkConfig,
+    source_train_split: str,
+    source_val_split: str,
+    source_test_split: str,
+) -> list[SequenceExample]:
+    allowed_labels = set(labels)
+    split_map = {
+        source_train_split: "train",
+        source_val_split: "val",
+        source_test_split: "test",
+    }
+    examples: list[SequenceExample] = []
+    for source_example in source_dataset.examples:
+        target_split = split_map.get(source_example.split)
+        if target_split is None:
+            continue
+        filtered_symbols: list[str] = []
+        filtered_glyphs: list[GlyphCrop] = []
+        for glyph in source_example.glyphs:
+            if glyph.true_symbol not in allowed_labels:
+                continue
+            filtered_symbols.append(glyph.true_symbol)
+            filtered_glyphs.append(
+                replace(
+                    glyph,
+                    position=len(filtered_glyphs),
+                )
+            )
+        if len(filtered_glyphs) < config.minimum_real_sequence_length:
+            continue
+        if config.maximum_real_sequence_length is not None:
+            filtered_glyphs = filtered_glyphs[: config.maximum_real_sequence_length]
+            filtered_symbols = filtered_symbols[: config.maximum_real_sequence_length]
+        examples.append(
+            SequenceExample(
+                example_id=source_example.example_id,
+                family=source_example.family,
+                glyphs=filtered_glyphs,
+                plaintext=source_example.plaintext,
+                observed_symbols=filtered_symbols,
+                split=target_split,
+                metadata=source_example.metadata
+                | {
+                    "synthetic_sequence_task": False,
+                    "task_name": "real_grouped_manifest_sequences",
+                    "source_dataset_name": source_dataset.dataset_name,
+                    "source_example_id": source_example.example_id,
+                },
+            )
+        )
+    return examples
+
+
 def _build_markov_sequence_examples(
     labels: list[str],
     label_groups: dict[str, str],
@@ -341,6 +419,7 @@ def build_real_glyph_sequence_benchmark(
             rng=rng,
             source_dataset_name=source_dataset.dataset_name,
         )
+        synthetic_from_real = True
     elif config.task_name == "real_glyph_process_family_sequences":
         examples = _build_process_family_sequence_examples(
             labels=labels,
@@ -351,20 +430,51 @@ def build_real_glyph_sequence_benchmark(
             rng=rng,
             source_dataset_name=source_dataset.dataset_name,
         )
+        synthetic_from_real = True
+    elif config.task_name == "real_grouped_manifest_sequences":
+        examples = _build_real_grouped_sequence_examples(
+            source_dataset=source_dataset,
+            labels=labels,
+            config=config,
+            source_train_split=source_train_split,
+            source_val_split=source_val_split,
+            source_test_split=source_test_split,
+        )
+        if not examples:
+            raise ValueError("Real grouped benchmark selection produced no usable grouped sequences.")
+        label_groups = {label: "observed_grouped_token" for label in labels}
+        transition_matrix = _estimate_empirical_transition_matrix(
+            [example for example in examples if example.split == "train"],
+            labels=labels,
+            smoothing=config.cross_group_bias,
+        )
+        synthetic_from_real = False
     else:
         raise ValueError(f"Unsupported sequence benchmark task: {config.task_name}")
+    split_counts = {
+        split: len([example for example in examples if example.split == split])
+        for split in ("train", "val", "test")
+    }
     dataset = DatasetCollection(
         dataset_name=f"{source_dataset.dataset_name}_sequence_branch",
         examples=examples,
         manifest_path=source_dataset.manifest_path,
         metadata=source_dataset.metadata
         | {
-            "synthetic_from_real": True,
+            "synthetic_from_real": synthetic_from_real,
             "source_dataset_name": source_dataset.dataset_name,
             "task_name": config.task_name,
             "selected_symbols": labels,
             "label_groups": label_groups,
-            "sequence_length": config.sequence_length,
+            "sequence_length": (
+                config.sequence_length
+                if synthetic_from_real
+                else {
+                    "min": min(example.sequence_length for example in examples),
+                    "max": max(example.sequence_length for example in examples),
+                    "mean": float(np.mean([example.sequence_length for example in examples])),
+                }
+            ),
             "sequence_counts": split_counts,
             "process_families": list(config.process_families),
         },
@@ -377,13 +487,15 @@ def build_real_glyph_sequence_benchmark(
         metadata={
             "source_dataset_name": source_dataset.dataset_name,
             "source_manifest": source_dataset.manifest_path,
-            "synthetic_from_real": True,
+            "synthetic_from_real": synthetic_from_real,
             "benchmark_note": (
                 "Sequence-level tasks are synthetic and built from real glyph crops. "
                 "They support downstream evaluation without implying semantic decipherment."
+                if synthetic_from_real
+                else "Grouped sequences come from a real manifest-backed corpus and use the current structured-uncertainty pipeline directly."
             ),
             "task_name": config.task_name,
             "selected_symbols": labels,
-            "sequence_length": config.sequence_length,
+            "sequence_length": dataset.metadata["sequence_length"],
         },
     )

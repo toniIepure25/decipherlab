@@ -12,6 +12,8 @@ DecipherLab is a research-grade, uncertainty-aware experimentation platform for 
 - Uncertainty-preserving transcription and hypothesis ranking
 - Auditable baselines with explicit null controls
 - Paper-ready outputs and manuscript refresh scripts
+- Sequence-branch paper package with real grouped replication and support-aware propagation analysis
+- DAS 2026 LaTeX submission workspace under `paper/das/paper_1`
 - Clear separation between structure discovery and semantic recovery
 
 The first implemented milestone is a synthetic, fully reproducible pipeline:
@@ -49,6 +51,13 @@ scripts/              Convenience wrappers and future automation hooks
 src/decipherlab/      Research code
 tests/                Unit and integration coverage
 ```
+
+## Current Paper Assets
+
+- `submission_bplus/`: reviewer-facing Markdown package for the stronger sequence branch
+- `paper/das/paper_1/`: IEEE/DAS LaTeX submission package built from the stronger sequence-branch evidence
+
+The current stronger paper is positioned as a support-aware uncertainty propagation study for low-resource glyph and grouped recognition. Its strongest supported real-data claim is that preserved transcription uncertainty improves grouped top-k recovery across two token-aligned corpora, while higher-level propagation remains support-gated and selective.
 
 ## Quick Start
 

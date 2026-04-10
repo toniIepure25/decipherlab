@@ -1,0 +1,10 @@
+claim_id,metric,sample_count,mean_effect,median_effect,std_effect,standardized_mean_effect,positive_fraction,notes
+real_grouped_two_corpus_raw_grouped_topk_delta,grouped_topk_delta,288,0.18055555555555555,0.0,0.502117430070145,0.3595883049316417,0.2326388888888889,Replicated real grouped top-k rescue across Historical Newspapers and ScaDS.AI.
+real_grouped_historical_conformal_exact_delta,grouped_exact_delta,144,0.1388888888888889,0.0,0.40157867485558224,0.34585723193303736,0.1597222222222222,Historical Newspapers grouped exact rescue under conformal.
+real_grouped_scadsai_raw_grouped_topk_delta,grouped_topk_delta,144,0.3055555555555556,0.0,0.4898664469041222,0.623752774836117,0.3194444444444444,ScaDS.AI grouped top-k rescue under raw uncertainty.
+real_downstream_two_corpus_raw_exact_delta,downstream_exact_delta,288,-0.027777777777777776,0.0,0.40730217496153276,-0.06819943394704735,0.06944444444444445,Two-corpus real downstream exact delta under raw uncertainty.
+real_downstream_two_corpus_conformal_exact_delta,downstream_exact_delta,288,0.059027777777777776,0.0,0.32272993406175726,0.18290146511938457,0.08333333333333333,Two-corpus real downstream exact delta under conformal.
+real_downstream_historical_conformal_exact_delta,downstream_exact_delta,144,0.1388888888888889,0.0,0.40157867485558224,0.34585723193303736,0.1597222222222222,Historical Newspapers real downstream exact delta under conformal.
+real_downstream_scadsai_raw_exact_delta,downstream_exact_delta,144,0.034722222222222224,0.0,0.36157822352624486,0.09602962779007608,0.08333333333333333,ScaDS.AI real downstream exact delta under raw uncertainty.
+synthetic_markov_raw_grouped_topk_delta,grouped_topk_delta,1152,0.051215277777777776,0.0,0.25341127263782653,0.20210339202618766,0.059027777777777776,Synthetic-from-real Markov grouped top-k delta under raw uncertainty.
+synthetic_family_raw_downstream_exact_delta,downstream_exact_delta,1152,0.04774305555555555,0.0,0.468054235439533,0.10200325505167528,0.1345486111111111,Synthetic-from-real process-family downstream delta under raw uncertainty.

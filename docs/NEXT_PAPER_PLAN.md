@@ -1,52 +1,107 @@
 # Next Paper Plan
 
-## Research Question
+## Updated Research Question
 
-Can structured transcription uncertainty, when decoded with explicit sequence constraints, improve higher-level inference under ambiguity in low-resource glyph and manuscript-like settings?
+Can structured transcription uncertainty, when decoded with explicit sequence constraints, improve grouped recovery under ambiguity beyond symbol-level top-k rescue, and does any part of that advantage survive on real grouped data?
 
-## Difference From The Current Workshop Paper
+The paper is now better framed as a propagation question:
 
-The workshop paper is symbol-level and externally grounded on three real datasets.
+- under what measurable support conditions does symbol rescue propagate to grouped rescue and then to downstream recovery?
 
-The next paper should test whether uncertainty becomes more useful once it is:
+## Current Empirical State
 
-1. represented structurally rather than as flat top-k rows
-2. decoded jointly with sequence constraints
-3. evaluated on sequence-level tasks where downstream utility is measurable
-4. controlled with principled uncertainty sets rather than only raw calibration
+The branch now has three evidence layers:
 
-## Branch Hypothesis
+1. real symbol-level results from the frozen workshop package
+2. synthetic-from-real grouped results on three real glyph corpora
+3. one strengthened real grouped/token-aligned benchmark from historical newspapers
+4. one second real grouped/token-aligned benchmark from ScaDS.AI
+5. one real downstream structural task built from train-derived transcript banks on those corpora
+6. one small full-test-split visual audit over Historical Newspapers
+7. one gold-style adjudicated upgrade of that same Historical Newspapers test split
 
-The main method hypothesis is:
+## Strongest Supported Pattern
 
-> Sequence constraints can convert symbol-level ambiguity rescue into measurable sequence-level recovery gains.
+The cleanest cross-dataset synthetic pattern remains:
 
-The accompanying reliability hypothesis is:
+- with calibrated posteriors, `uncertainty_beam` improves mean sequence exact match over `fixed_greedy` on Omniglot, Digits, and Kuzushiji-49
+- sequence top-k gains are more stable than exact-match gains
+- the strongest synthetic grouped gains remain on Kuzushiji-49
 
-> Risk-controlled prediction sets can make these gains safer and easier to interpret than raw posterior truncation alone.
+## Strongest New Real Grouped Pattern
 
-## Minimal Serious Baseline
+The branch now has two real grouped transfer checks:
 
-The first publishable baseline in this branch is:
+- Historical Newspapers: grouped top-k rescue is positive, symbol top-k rescue is positive, raw exact-match gain is negative on average, and conformal gives the clearest exact-match gain.
+- ScaDS.AI: grouped top-k rescue is again positive, symbol top-k rescue is again positive, and raw exact-match gain becomes positive under `cluster_distance`, but conformal exact-match gains do not carry over cleanly.
 
-- real glyph crops as the visual source
-- synthetic Markov-style sequences built from those crops
-- confusion-network uncertainty representation
-- bigram transition model with beam search
-- split conformal prediction sets for coverage-aware pruning
+This is materially stronger than a one-corpus grouped paper because grouped top-k rescue now replicates across two real grouped corpora.
 
-## Evidence Needed For A Stronger Paper
+## Real Downstream Structural Result
 
-- ambiguity-sweep results showing where structured decoding helps most
-- sequence-level gains beyond plain symbol top-k rescue
-- failure analysis showing when structural decoding still fails
-- calibration versus conformal comparisons under the same benchmark
-- comparisons across modern and historically grounded glyph corpora
+The branch now also has one real downstream structural test:
 
-## Immediate Deliverables
+- the original exact transcript-bank task was coverage-limited and mostly negative
+- the redesigned train-supported n-gram-path task is much better covered on both corpora
+- positive real downstream gains now appear, but selectively:
+  - ScaDS.AI shows a positive raw uncertainty exact downstream gain under `cluster_distance`
+  - Historical Newspapers shows the clearest conformal downstream rescue
+- across both corpora, exact downstream recovery still does not replicate cleanly
 
-- branch scaffold and configs
-- benchmark implementation
-- first structured decoder baseline
-- first risk-control baseline
-- sequence-level metrics and tests
+This is stronger than the original negative downstream boundary, but still not a clean positive replicated real downstream result.
+
+## Validation Outcome
+
+The first robustness check on the real grouped benchmark is now complete:
+
+- full test split audited: `30` sequences / `126` tokens
+- corrected tokens: `2`
+- token error rate: `0.016`
+- grouped metrics unchanged after correction
+
+So the current grouped finding looks stable to a small curated audit, but not yet upgraded to a gold-label result.
+
+## Gold-Style Outcome
+
+The benchmark now also has a gold-style strengthened slice:
+
+- full test split upgraded to pass-A / pass-B adjudicated labels
+- pass agreement: `1.000`
+- OCR-to-gold token error rate: `0.016`
+- grouped metrics unchanged relative to the OCR-derived and audited runs
+
+This makes the Historical Newspapers result more trustworthy, but not sufficient by itself.
+
+## Best Current Claim
+
+The strongest evidence-bound claim now available is:
+
+> Structured uncertainty helps reliably at symbol level on real data, yields modest grouped gains on synthetic-from-real sequence tasks, and now shows replicated grouped top-k transfer across two real grouped/token-aligned corpora, with mixed exact-match behavior.
+
+The strongest explanatory extension is:
+
+> Rescue propagation is support-gated. Symbol rescue strongly predicts grouped rescue, but grouped rescue becomes real downstream success only in specific support regimes rather than under a universal rule.
+
+## What Still Blocks A Stronger Submission Tier
+
+- exact-match behavior is still mixed across the two real grouped corpora
+- the redesigned real downstream task still gives mixed exact gains rather than a replicated positive effect
+- the propagation regimes are informative but still partly corpus-specific
+- the Historical Newspapers gold-style upgrade is still a repeated in-session review rather than an independent multi-annotator gold dataset
+- real downstream family/process evidence is still missing
+- the stronger decoders remain selective rather than universally helpful
+
+## Highest-Leverage Next Step
+
+The best next step is no longer another decoder. It is one of:
+
+1. add a real grouped downstream target with cleaner semantics than local n-gram support and non-trivial coverage
+2. replace the current Historical Newspapers gold-style test split with an independent multi-annotator gold annotation pass
+
+Either step would directly test whether the current grouped transfer story can move from a strong boundary result to a stronger real downstream paper.
+
+If no additional data step is feasible, the branch is now strong enough for a bounded paper organized around:
+
+1. replicated real grouped top-k transfer
+2. a better-covered but still mixed real downstream test
+3. a support-aware explanation of why rescue propagates in some regimes and fails in others

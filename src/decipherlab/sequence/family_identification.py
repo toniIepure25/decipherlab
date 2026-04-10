@@ -56,18 +56,22 @@ def family_identification_payload(
     classifier: ProcessFamilyClassifier | None,
     decoded_sequence: list[str],
     true_family: str | None,
+    top_k: int = 2,
 ) -> dict[str, Any]:
     if classifier is None or true_family is None:
         return {
             "family_identification_supported": False,
             "predicted_family": None,
             "family_identification_accuracy": None,
+            "family_identification_topk_recovery": None,
             "family_scores": {},
         }
     predicted_family, scores = classifier.predict(decoded_sequence)
+    ranked = [family for family, _ in sorted(scores.items(), key=lambda item: item[1], reverse=True)]
     return {
         "family_identification_supported": True,
         "predicted_family": predicted_family,
         "family_identification_accuracy": float(predicted_family == true_family),
+        "family_identification_topk_recovery": float(true_family in ranked[:top_k]),
         "family_scores": scores,
     }

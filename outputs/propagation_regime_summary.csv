@@ -1,0 +1,6 @@
+method_family,support_regime,entropy_regime,count,downstream_exact_rescue_rate,grouped_topk_rescue_rate,mean_ambiguity_level,mean_coverage,mean_entropy
+conformal,high_support,low_entropy,240,0.0125,0.0375,0.225,1.0,0.3660927190611597
+conformal,limited_support,low_entropy,48,0.4375,0.3333333333333333,0.22499999999999998,0.6333333333333333,0.03996612298868459
+raw_uncertainty,high_support,high_entropy,14,0.35714285714285715,0.7142857142857143,0.27857142857142864,1.0,1.3021494639296376
+raw_uncertainty,high_support,low_entropy,226,0.06637168141592921,0.24778761061946902,0.22168141592920354,1.0,0.6874916129305655
+raw_uncertainty,limited_support,low_entropy,48,0.0,0.020833333333333332,0.22499999999999998,0.6333333333333333,0.4438608937976789

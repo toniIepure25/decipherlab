@@ -1,0 +1,21 @@
+dataset,task_name,coverage_metric,value,note
+historical_newspapers_real_grouped_gold,train_transcript_bank,valid_candidate_rate,0.9444444444444444,Fraction of test examples with any same-length train transcript candidate.
+historical_newspapers_real_grouped_gold,train_transcript_bank,exact_target_coverage,0.0,Fraction of test examples whose exact transcript appears in the train bank.
+historical_newspapers_real_grouped_gold,train_transcript_bank,approximate_exact_upper_bound,0.0,"Under exact transcript-bank decoding, exact recovery cannot exceed exact train/test overlap."
+historical_newspapers_real_grouped_gold,train_transcript_bank,mean_candidate_size,13.38888888888889,Average number of same-length train transcript candidates per test example.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,valid_candidate_rate,1.0,Fraction of test examples with at least one train-supported n-gram in the gold path.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,full_path_coverage,0.6666666666666666,Fraction of test examples whose full gold n-gram path is supported by train n-grams.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,mean_supported_fraction,0.8777777777777778,Average fraction of each gold n-gram path covered by the train n-gram inventory.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,approximate_exact_upper_bound,0.6666666666666666,Exact n-gram-path recovery cannot exceed the fraction with full train-supported n-gram coverage.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,mean_candidate_size,2.888888888888889,Average number of supported gold n-grams per test example.
+historical_newspapers_real_grouped_gold,train_supported_ngram_path,train_inventory_size,25.0,Distinct train n-gram inventory size used by the redesigned task.
+scadsai_real_grouped,train_transcript_bank,valid_candidate_rate,1.0,Fraction of test examples with any same-length train transcript candidate.
+scadsai_real_grouped,train_transcript_bank,exact_target_coverage,0.1111111111111111,Fraction of test examples whose exact transcript appears in the train bank.
+scadsai_real_grouped,train_transcript_bank,approximate_exact_upper_bound,0.1111111111111111,"Under exact transcript-bank decoding, exact recovery cannot exceed exact train/test overlap."
+scadsai_real_grouped,train_transcript_bank,mean_candidate_size,32.333333333333336,Average number of same-length train transcript candidates per test example.
+scadsai_real_grouped,train_supported_ngram_path,valid_candidate_rate,1.0,Fraction of test examples with at least one train-supported n-gram in the gold path.
+scadsai_real_grouped,train_supported_ngram_path,full_path_coverage,1.0,Fraction of test examples whose full gold n-gram path is supported by train n-grams.
+scadsai_real_grouped,train_supported_ngram_path,mean_supported_fraction,1.0,Average fraction of each gold n-gram path covered by the train n-gram inventory.
+scadsai_real_grouped,train_supported_ngram_path,approximate_exact_upper_bound,1.0,Exact n-gram-path recovery cannot exceed the fraction with full train-supported n-gram coverage.
+scadsai_real_grouped,train_supported_ngram_path,mean_candidate_size,3.0555555555555554,Average number of supported gold n-grams per test example.
+scadsai_real_grouped,train_supported_ngram_path,train_inventory_size,24.0,Distinct train n-gram inventory size used by the redesigned task.

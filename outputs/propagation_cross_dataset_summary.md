@@ -1,0 +1,9 @@
+# Propagation Cross Dataset Summary
+
+## Rows
+
+- `dataset`=`historical_newspapers`, `task_groups`=`real_grouped_downstream_redesigned`, `symbol_rescue_rate`=`0.128`, `grouped_topk_rescue_rate`=`0.128`, `grouped_given_symbol_rescue_rate`=`0.541`, `downstream_exact_rescue_rate`=`0.108`, `downstream_given_grouped_rescue_rate`=`0.622`, `mean_entropy`=`0.212`, `mean_set_size`=`1.632`, `mean_support`=`0.878`
+- `dataset`=`kuzushiji49`, `task_groups`=`synthetic_markov,synthetic_process_family`, `symbol_rescue_rate`=`0.473`, `grouped_topk_rescue_rate`=`0.064`, `grouped_given_symbol_rescue_rate`=`0.121`, `downstream_exact_rescue_rate`=`0.129`, `downstream_given_grouped_rescue_rate`=`0.361`, `mean_entropy`=`0.723`, `mean_set_size`=`3.024`, `mean_support`=`None`
+- `dataset`=`omniglot`, `task_groups`=`synthetic_markov,synthetic_process_family`, `symbol_rescue_rate`=`0.474`, `grouped_topk_rescue_rate`=`0.016`, `grouped_given_symbol_rescue_rate`=`0.033`, `downstream_exact_rescue_rate`=`0.043`, `downstream_given_grouped_rescue_rate`=`0.500`, `mean_entropy`=`0.660`, `mean_set_size`=`3.256`, `mean_support`=`None`
+- `dataset`=`scadsai`, `task_groups`=`real_grouped_downstream_redesigned`, `symbol_rescue_rate`=`0.361`, `grouped_topk_rescue_rate`=`0.191`, `grouped_given_symbol_rescue_rate`=`0.413`, `downstream_exact_rescue_rate`=`0.045`, `downstream_given_grouped_rescue_rate`=`0.236`, `mean_entropy`=`0.776`, `mean_set_size`=`2.817`, `mean_support`=`1.000`
+- `dataset`=`sklearn_digits`, `task_groups`=`synthetic_markov,synthetic_process_family`, `symbol_rescue_rate`=`0.455`, `grouped_topk_rescue_rate`=`0.051`, `grouped_given_symbol_rescue_rate`=`0.092`, `downstream_exact_rescue_rate`=`0.099`, `downstream_given_grouped_rescue_rate`=`0.250`, `mean_entropy`=`0.676`, `mean_set_size`=`2.832`, `mean_support`=`None`

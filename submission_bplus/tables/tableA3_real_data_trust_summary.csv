@@ -1,0 +1,14 @@
+category,metric,value,notes
+validation_audit,audited_tokens,126,Full Historical Newspapers test split visual audit.
+validation_audit,audited_sequences,30,Grouped sequences reviewed in the audit pass.
+validation_audit,changed_tokens,2,Tokens changed relative to OCR-derived labels.
+gold_style,pass_agreement_rate,1.0,Pass A vs Pass B agreement on gold-style pass.
+gold_style,ocr_to_gold_token_error_rate,0.015873015873015872,OCR-derived token disagreement against adjudicated labels.
+gold_style,ocr_to_gold_sequence_error_rate,0.03333333333333333,Grouped sequence disagreement rate.
+trust_support,qc_contact_sheet_count,6,Saved QC sheets covering the reviewed Historical subset.
+error_taxonomy,ocr_substitution:den->der,1,Observed gold-style correction count.
+error_taxonomy,ocr_substitution:der->des,1,Observed gold-style correction count.
+metric_stability_audit,cluster_distance_validated_minus_original_conformal_exact_delta,0.0,Metric drift after first audit pass.
+metric_stability_audit,calibrated_classifier_validated_minus_original_conformal_exact_delta,0.0,Metric drift after first audit pass.
+metric_stability_gold,cluster_distance_gold_minus_original_conformal_exact_delta,0.0,Metric drift after gold-style adjudication.
+metric_stability_gold,calibrated_classifier_gold_minus_original_conformal_exact_delta,0.0,Metric drift after gold-style adjudication.
