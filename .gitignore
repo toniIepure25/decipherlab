@@ -22,6 +22,13 @@ paper/das/**/*.blg
 paper/das/**/*.log
 paper/das/**/*.out
 paper/das/**/*.synctex.gz
+paper/icdar_das/**/__pycache__/
+paper/icdar_das/**/*.aux
+paper/icdar_das/**/*.bbl
+paper/icdar_das/**/*.blg
+paper/icdar_das/**/*.log
+paper/icdar_das/**/*.out
+paper/icdar_das/**/*.synctex.gz
 
 # Keep raw source datasets out of Git while preserving lightweight notes.
 data/raw/**
