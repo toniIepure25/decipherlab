@@ -2,24 +2,24 @@
 
 \subsection{Evidence Ladder}
 
-The paper combines four evidence layers: fully real symbol-level evidence from the frozen workshop package, synthetic-from-real grouped and downstream evidence from the stronger sequence branch, replicated real grouped evidence on two corpora, and a redesigned real downstream task with improved coverage. Table~\ref{tab:bridge} makes that claim boundary explicit.
+The paper advances through a deliberate evidence ladder: fully real symbol-level evidence from the frozen workshop package, synthetic-from-real grouped and downstream evidence from the stronger sequence branch, replicated real grouped evidence on two corpora, and a redesigned real downstream task with improved coverage. Table~\ref{tab:bridge} keeps that claim boundary explicit without trying to narrate the whole paper in one artifact. The Historical Newspapers trust hardening sits behind this ladder rather than inside it, and Appendix Table~\ref{tab:appendix_trust} records that audit chain directly.
 
 \input{tables/table1_bridge}
 
 \subsection{Replicated Real Grouped Transfer}
 
-The cleanest new real result is grouped top-k replication across Historical Newspapers and ScaDS.AI. Historical Newspapers shows a mean grouped top-k delta of +0.056, ScaDS.AI shows +0.306, and the two-corpus mean grouped top-k delta is +0.181. Example-level bootstrap analysis gives a confidence interval of [+0.122, +0.236] with bootstrap probability 1.000 for a positive mean effect. Figure~\ref{fig:real_grouped_replication} shows the key pattern directly: grouped top-k rescue replicates, while exact recovery remains mixed.
+The cleanest new real result is grouped top-k replication across Historical Newspapers and ScaDS.AI. Historical Newspapers shows a mean grouped top-k delta of +0.056, ScaDS.AI shows +0.306, and the two-corpus mean grouped top-k delta is +0.181. Example-level bootstrap analysis gives a confidence interval of [+0.122, +0.236] with bootstrap probability 1.000 for a positive mean effect. Figure~\ref{fig:storyline} makes the paper's core contrast visible in one place: the real grouped signal replicates, but downstream propagation is gated by support regime rather than arriving automatically.
 
 \begin{figure*}[!t]
 \centering
-\includegraphics[width=0.98\textwidth]{figures/fig2_real_grouped_replication_plot}
-\caption{Real grouped replication across Historical Newspapers and ScaDS.AI. Grouped top-k rescue remains positive on both corpora, while exact gains remain mixed. The left panel carries the strongest replicated real-data result in the paper.}
-\label{fig:real_grouped_replication}
+\includegraphics[width=0.98\textwidth]{figures/fig1_propagation_regime_plot}
+\caption{From replicated grouped rescue to support-gated downstream rescue. Panel A shows the paper's strongest replicated real-data signal: grouped top-k rescue is positive on both real grouped corpora across both posterior families. Panels B and C show the explanatory result: downstream rescue depends on support regime, and raw uncertainty versus conformal help in different parts of that space.}
+\label{fig:storyline}
 \end{figure*}
 
 \subsection{Redesigned Real Downstream Task}
 
-The redesigned downstream task removes much of the previous coverage collapse, but it does not convert the branch into a clean replicated exact downstream paper. Selective positive cases do appear. ScaDS.AI with cluster-distance posteriors shows a raw exact downstream delta of +0.111, and Historical Newspapers under cluster-distance posteriors shows a conformal exact downstream delta of +0.222 over raw uncertainty. Across both real corpora, however, the mean raw exact downstream delta remains -0.028 and the mean conformal exact downstream delta is +0.059. The raw interval crosses zero, while the conformal interval remains positive. Appendix Table~\ref{tab:appendix_robustness} reports the compact bootstrap summary.
+The redesigned downstream task removes much of the previous coverage collapse, but it does not convert the branch into a clean replicated exact downstream paper. Selective positive cases do appear. ScaDS.AI with cluster-distance posteriors shows a raw exact downstream delta of +0.111, and Historical Newspapers under cluster-distance posteriors shows a conformal exact downstream delta of +0.222 over raw uncertainty. Across both real corpora, however, the mean raw exact downstream delta remains -0.028 and the mean conformal exact downstream delta is +0.059. The raw interval crosses zero, while the conformal interval remains positive. Appendix Figure~\ref{fig:appendix_downstream} and Table~\ref{tab:appendix_robustness} keep the coverage and bootstrap details visible without crowding the main narrative.
 
 \subsection{Propagation Analysis}
 
@@ -27,11 +27,4 @@ The propagation analysis is the main analytical contribution. Symbol rescue is t
 
 The rate summaries reinforce that interpretation. Grouped-rescue rate rises by about 0.085 when symbol rescue is present, with bootstrap interval [0.072, 0.099]. Downstream exact-rescue rate rises by about 0.375 when grouped rescue is present, with bootstrap interval [0.275, 0.475]. The most stable downstream threshold is grouped top-k delta greater than or equal to one recovered alternative, while entropy thresholds are informative but less stable across posterior families.
 
-Figure~\ref{fig:propagation_regimes} is the main explanatory artifact. It shows that raw uncertainty and conformal help in different parts of the support space. Raw uncertainty helps most in rare high-support, high-entropy regions, whereas conformal helps more in limited-support, low-entropy regions. The paper's explanation is therefore regime-aware rather than monotonic.
-
-\begin{figure*}[!t]
-\centering
-\includegraphics[width=0.98\textwidth]{figures/fig1_propagation_regime_plot}
-\caption{Propagation regimes on the real downstream task. Real downstream rescue rates are separated by method family, support regime, and entropy regime. The figure explains the mixed downstream result rather than claiming universal downstream improvement.}
-\label{fig:propagation_regimes}
-\end{figure*}
+Figure~\ref{fig:storyline} shows that raw uncertainty and conformal help in different parts of the support space. Raw uncertainty helps most in rare high-support, high-entropy regions, whereas conformal helps more in limited-support, low-entropy regions. The explanation is therefore regime-aware rather than monotonic: local rescue can be real and replicated, but its downstream usefulness still depends on measurable support conditions.

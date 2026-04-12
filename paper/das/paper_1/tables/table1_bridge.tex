@@ -1,27 +1,18 @@
-\begin{table*}[t]
-\caption{Evidence ladder for the paper's main claims.}
+\begin{table}[t]
+\caption{Evidence boundary.}
 \label{tab:bridge}
 \centering
 \footnotesize
-\setlength{\tabcolsep}{4pt}
-\renewcommand{\arraystretch}{1.08}
-\begin{tabular}{|p{1.8cm}|p{3.0cm}|p{2.6cm}|p{7.0cm}|}
-\hline
-\textbf{Tier} & \textbf{Data and task} & \textbf{Main signal} & \textbf{Boundary it supports} \\
-\hline
-Real symbol level & Frozen workshop symbol benchmark & Top-k delta $+$0.224 & Fully real symbol-level uncertainty retention remains the strongest clean real result. \\
-\hline
-Synthetic grouped & Omniglot, Digits, Kuzushiji-49 Markov sequences & Exact delta $+$0.019, top-k delta $+$0.073 & Higher-level grouped gains exist beyond symbol level, but the structure is synthetic-from-real. \\
-\hline
-Synthetic downstream & Process-family recovery & Family delta $+$0.048 & Downstream structural gains exist on synthetic-from-real tasks, but they are selective. \\
-\hline
-Real grouped replication & Historical Newspapers and ScaDS.AI grouped words & Top-k delta $+$0.181, CI [$+$0.122, $+$0.236] & Grouped top-k rescue replicates across two real grouped token-aligned corpora. \\
-\hline
-Real grouped exact & Same two real corpora & Conformal exact delta $+$0.059 & Exact grouped recovery remains mixed rather than cleanly replicated. \\
-\hline
-Real downstream redesign & Two real grouped corpora, train-supported n-gram path & Coverage upper bound 0.833; raw exact delta $-$0.028; conformal exact delta $+$0.059 & The downstream task is no longer coverage-starved, but exact real downstream gains remain selective. \\
-\hline
-Real-data trust & Historical Newspapers audit and gold-style pass & 2/126 token changes; zero metric drift & The Historical Newspapers grouped result is strong enough for a bounded real grouped-recognition claim. \\
-\hline
-\end{tabular}
-\end{table*}
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.1}
+\begin{tabularx}{\columnwidth}{@{}p{1.35cm}p{2.25cm}X@{}}
+\toprule
+\textbf{Layer} & \textbf{Evidence} & \textbf{Boundary} \\
+\midrule
+Real symbols & Top-k $\Delta$ $+$0.224 & Strongest fully real signal. \\
+Synthetic structure & Seq. $+$0.019; family $+$0.048 & Higher-level gains are synthetic-from-real. \\
+Real grouped & Grouped top-k $+$0.181 [$+$0.122, $+$0.236] & Replicates across two real corpora. \\
+Real downstream & Coverage 0.833; raw $-$0.028; conf. $+$0.059 & Better support, but exact gains stay selective. \\
+\bottomrule
+\end{tabularx}
+\end{table}

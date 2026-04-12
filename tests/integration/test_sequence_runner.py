@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 
 from decipherlab.config import (
+    AdaptiveDecodingConfig,
     DecodingConfig,
     RealDownstreamConfig,
     RiskControlConfig,
@@ -264,3 +265,445 @@ def test_sequence_branch_runner_supports_real_grouped_manifest_task(tmp_path):
     assert "preliminary grouped evidence" in report_text
     assert any(row["real_downstream_exact_match"] is not None for row in result["summary_rows"])
     assert any(row["real_downstream_bank_coverage"] is not None for row in result["summary_rows"])
+
+
+def test_sequence_branch_runner_supports_adaptive_method(tmp_path):
+    manifest_path = create_real_manifest_fixture(tmp_path / "adaptive")
+    base_config = build_test_config(tmp_path / "adaptive")
+    config = base_config.model_copy(
+        update={
+            "experiment": base_config.experiment.model_copy(
+                update={"name": "sequence_branch_adaptive_fixture", "output_root": tmp_path / "runs"}
+            ),
+            "dataset": base_config.dataset.model_copy(
+                update={
+                    "source": "manifest",
+                    "manifest_path": manifest_path,
+                    "generate_if_missing": False,
+                    "train_split": "train",
+                    "val_split": "val",
+                    "evaluation_split": "test",
+                }
+            ),
+            "evaluation": base_config.evaluation.model_copy(update={"ambiguity_levels": [0.0], "top_k": 3}),
+            "sequence_benchmark": SequenceBenchmarkConfig(
+                enabled=True,
+                task_name="real_grouped_manifest_sequences",
+                selected_symbol_count=4,
+                min_instances_per_symbol=2,
+                train_sequences=1,
+                val_sequences=1,
+                test_sequences=1,
+                sequence_length=6,
+                group_count=2,
+                self_transition_bias=3.0,
+                within_group_bias=1.5,
+                cross_group_bias=0.35,
+                transition_noise=0.05,
+                sample_with_replacement=False,
+                minimum_real_sequence_length=4,
+                maximum_real_sequence_length=6,
+            ),
+            "structured_uncertainty": StructuredUncertaintyConfig(
+                enabled=True,
+                max_candidates_per_position=3,
+                cumulative_probability_mass=0.95,
+                min_probability=1.0e-5,
+                include_top1_fallback=True,
+            ),
+            "decoding": DecodingConfig(
+                enabled=True,
+                decoder_variants=["bigram_beam"],
+                beam_width=6,
+                lm_weight=1.2,
+                transition_smoothing=0.1,
+                top_k_sequences=3,
+                length_normalize=True,
+            ),
+            "adaptive_decoding": AdaptiveDecodingConfig(enabled=True),
+            "risk_control": RiskControlConfig(
+                enabled=True,
+                alpha=0.1,
+                min_set_size=1,
+                max_set_size=3,
+                include_top1_fallback=True,
+            ),
+            "real_downstream": RealDownstreamConfig(
+                enabled=True,
+                task_name="train_supported_ngram_path",
+                transcript_top_k=3,
+                min_frequency=1,
+                exact_length_only=True,
+                missing_log_probability=1.0e-8,
+                ngram_order=2,
+                min_supported_ngrams=1,
+            ),
+        }
+    )
+
+    result = run_sequence_branch_experiment(config, strategy_override="calibrated_classifier")
+    methods = {row["method"] for row in result["summary_rows"]}
+    adaptive_rows = [row for row in result["per_sequence_rows"] if row["method"] == "adaptive_support_beam"]
+
+    assert methods == {"fixed_greedy", "uncertainty_beam", "conformal_beam", "adaptive_support_beam"}
+    assert adaptive_rows
+    assert all(row["adaptive_selected_method"] in {"uncertainty_beam", "conformal_beam"} for row in adaptive_rows)
+
+
+def test_sequence_branch_runner_supports_learned_adaptive_method(tmp_path):
+    manifest_path = create_real_manifest_fixture(tmp_path / "adaptive_learned")
+    base_config = build_test_config(tmp_path / "adaptive_learned")
+    config = base_config.model_copy(
+        update={
+            "experiment": base_config.experiment.model_copy(
+                update={"name": "sequence_branch_adaptive_learned_fixture", "output_root": tmp_path / "runs"}
+            ),
+            "dataset": base_config.dataset.model_copy(
+                update={
+                    "source": "manifest",
+                    "manifest_path": manifest_path,
+                    "generate_if_missing": False,
+                    "train_split": "train",
+                    "val_split": "val",
+                    "evaluation_split": "test",
+                }
+            ),
+            "evaluation": base_config.evaluation.model_copy(update={"ambiguity_levels": [0.0], "top_k": 3}),
+            "sequence_benchmark": SequenceBenchmarkConfig(
+                enabled=True,
+                task_name="real_grouped_manifest_sequences",
+                selected_symbol_count=4,
+                min_instances_per_symbol=2,
+                train_sequences=1,
+                val_sequences=1,
+                test_sequences=1,
+                sequence_length=6,
+                group_count=2,
+                self_transition_bias=3.0,
+                within_group_bias=1.5,
+                cross_group_bias=0.35,
+                transition_noise=0.05,
+                sample_with_replacement=False,
+                minimum_real_sequence_length=4,
+                maximum_real_sequence_length=6,
+            ),
+            "structured_uncertainty": StructuredUncertaintyConfig(
+                enabled=True,
+                max_candidates_per_position=3,
+                cumulative_probability_mass=0.95,
+                min_probability=1.0e-5,
+                include_top1_fallback=True,
+            ),
+            "decoding": DecodingConfig(
+                enabled=True,
+                decoder_variants=["bigram_beam"],
+                beam_width=6,
+                lm_weight=1.2,
+                transition_smoothing=0.1,
+                top_k_sequences=3,
+                length_normalize=True,
+            ),
+            "adaptive_decoding": AdaptiveDecodingConfig(
+                enabled=True,
+                policy="support_aware_learned_gate",
+                learned_gate_steps=500,
+            ),
+            "risk_control": RiskControlConfig(
+                enabled=True,
+                alpha=0.1,
+                min_set_size=1,
+                max_set_size=3,
+                include_top1_fallback=True,
+            ),
+            "real_downstream": RealDownstreamConfig(
+                enabled=True,
+                task_name="train_supported_ngram_path",
+                transcript_top_k=3,
+                min_frequency=1,
+                exact_length_only=True,
+                missing_log_probability=1.0e-8,
+                ngram_order=2,
+                min_supported_ngrams=1,
+            ),
+        }
+    )
+
+    result = run_sequence_branch_experiment(config, strategy_override="calibrated_classifier")
+    methods = {row["method"] for row in result["summary_rows"]}
+    adaptive_rows = [row for row in result["per_sequence_rows"] if row["method"] == "adaptive_learned_beam"]
+
+    assert methods == {"fixed_greedy", "uncertainty_beam", "conformal_beam", "adaptive_learned_beam"}
+    assert adaptive_rows
+    assert all(row["adaptive_selected_method"] in {"uncertainty_beam", "conformal_beam"} for row in adaptive_rows)
+    assert any(row["adaptive_gate_conformal_probability"] is not None for row in adaptive_rows)
+
+
+def test_sequence_branch_runner_supports_constrained_adaptive_method(tmp_path):
+    manifest_path = create_real_manifest_fixture(tmp_path / "adaptive_constrained")
+    base_config = build_test_config(tmp_path / "adaptive_constrained")
+    config = base_config.model_copy(
+        update={
+            "experiment": base_config.experiment.model_copy(
+                update={"name": "sequence_branch_adaptive_constrained_fixture", "output_root": tmp_path / "runs"}
+            ),
+            "dataset": base_config.dataset.model_copy(
+                update={
+                    "source": "manifest",
+                    "manifest_path": manifest_path,
+                    "generate_if_missing": False,
+                    "train_split": "train",
+                    "val_split": "val",
+                    "evaluation_split": "test",
+                }
+            ),
+            "evaluation": base_config.evaluation.model_copy(update={"ambiguity_levels": [0.0, 0.35], "top_k": 3}),
+            "sequence_benchmark": SequenceBenchmarkConfig(
+                enabled=True,
+                task_name="real_grouped_manifest_sequences",
+                selected_symbol_count=4,
+                min_instances_per_symbol=2,
+                train_sequences=1,
+                val_sequences=1,
+                test_sequences=1,
+                sequence_length=6,
+                group_count=2,
+                self_transition_bias=3.0,
+                within_group_bias=1.5,
+                cross_group_bias=0.35,
+                transition_noise=0.05,
+                sample_with_replacement=False,
+                minimum_real_sequence_length=4,
+                maximum_real_sequence_length=6,
+            ),
+            "structured_uncertainty": StructuredUncertaintyConfig(
+                enabled=True,
+                max_candidates_per_position=3,
+                cumulative_probability_mass=0.95,
+                min_probability=1.0e-5,
+                include_top1_fallback=True,
+            ),
+            "decoding": DecodingConfig(
+                enabled=True,
+                decoder_variants=["bigram_beam"],
+                beam_width=6,
+                lm_weight=1.2,
+                transition_smoothing=0.1,
+                top_k_sequences=3,
+                length_normalize=True,
+            ),
+            "adaptive_decoding": AdaptiveDecodingConfig(
+                enabled=True,
+                policy="support_aware_constrained_gate",
+                learned_gate_steps=500,
+            ),
+            "risk_control": RiskControlConfig(
+                enabled=True,
+                alpha=0.1,
+                min_set_size=1,
+                max_set_size=3,
+                include_top1_fallback=True,
+            ),
+            "real_downstream": RealDownstreamConfig(
+                enabled=True,
+                task_name="train_supported_ngram_path",
+                transcript_top_k=3,
+                min_frequency=1,
+                exact_length_only=True,
+                missing_log_probability=1.0e-8,
+                ngram_order=2,
+                min_supported_ngrams=1,
+            ),
+        }
+    )
+
+    result = run_sequence_branch_experiment(config, strategy_override="calibrated_classifier")
+    methods = {row["method"] for row in result["summary_rows"]}
+    adaptive_rows = [row for row in result["per_sequence_rows"] if row["method"] == "adaptive_constrained_beam"]
+
+    assert methods == {"fixed_greedy", "uncertainty_beam", "conformal_beam", "adaptive_constrained_beam"}
+    assert adaptive_rows
+    assert all(row["adaptive_selected_method"] in {"uncertainty_beam", "conformal_beam"} for row in adaptive_rows)
+    assert any(row["adaptive_gate_conformal_probability"] is not None for row in adaptive_rows)
+
+
+def test_sequence_branch_runner_supports_profiled_adaptive_method(tmp_path):
+    manifest_path = create_real_manifest_fixture(tmp_path / "adaptive_profiled")
+    base_config = build_test_config(tmp_path / "adaptive_profiled")
+    config = base_config.model_copy(
+        update={
+            "experiment": base_config.experiment.model_copy(
+                update={"name": "sequence_branch_adaptive_profiled_fixture", "output_root": tmp_path / "runs"}
+            ),
+            "dataset": base_config.dataset.model_copy(
+                update={
+                    "source": "manifest",
+                    "manifest_path": manifest_path,
+                    "generate_if_missing": False,
+                    "train_split": "train",
+                    "val_split": "val",
+                    "evaluation_split": "test",
+                }
+            ),
+            "evaluation": base_config.evaluation.model_copy(update={"ambiguity_levels": [0.0], "top_k": 3}),
+            "sequence_benchmark": SequenceBenchmarkConfig(
+                enabled=True,
+                task_name="real_grouped_manifest_sequences",
+                selected_symbol_count=4,
+                min_instances_per_symbol=2,
+                train_sequences=1,
+                val_sequences=1,
+                test_sequences=1,
+                sequence_length=6,
+                group_count=2,
+                self_transition_bias=3.0,
+                within_group_bias=1.5,
+                cross_group_bias=0.35,
+                transition_noise=0.05,
+                sample_with_replacement=False,
+                minimum_real_sequence_length=4,
+                maximum_real_sequence_length=6,
+            ),
+            "structured_uncertainty": StructuredUncertaintyConfig(
+                enabled=True,
+                max_candidates_per_position=3,
+                cumulative_probability_mass=0.95,
+                min_probability=1.0e-5,
+                include_top1_fallback=True,
+            ),
+            "decoding": DecodingConfig(
+                enabled=True,
+                decoder_variants=["bigram_beam"],
+                beam_width=6,
+                lm_weight=1.2,
+                transition_smoothing=0.1,
+                top_k_sequences=3,
+                length_normalize=True,
+            ),
+            "adaptive_decoding": AdaptiveDecodingConfig(
+                enabled=True,
+                policy="support_aware_profiled_gate",
+                operating_profile="shortlist_first",
+                review_budget_k=2,
+                learned_gate_steps=500,
+            ),
+            "risk_control": RiskControlConfig(
+                enabled=True,
+                alpha=0.1,
+                min_set_size=1,
+                max_set_size=3,
+                include_top1_fallback=True,
+            ),
+            "real_downstream": RealDownstreamConfig(
+                enabled=True,
+                task_name="train_supported_ngram_path",
+                transcript_top_k=3,
+                min_frequency=1,
+                exact_length_only=True,
+                missing_log_probability=1.0e-8,
+                ngram_order=2,
+                min_supported_ngrams=1,
+            ),
+        }
+    )
+
+    result = run_sequence_branch_experiment(config, strategy_override="calibrated_classifier")
+    methods = {row["method"] for row in result["summary_rows"]}
+    adaptive_rows = [row for row in result["per_sequence_rows"] if row["method"] == "adaptive_profiled_beam"]
+
+    assert methods == {"fixed_greedy", "uncertainty_beam", "conformal_beam", "adaptive_profiled_beam"}
+    assert adaptive_rows
+    assert all(row["adaptive_operating_profile"] == "shortlist_first" for row in adaptive_rows)
+    assert any(row["adaptive_gate_conformal_probability"] is not None for row in adaptive_rows)
+    assert all(row["adaptive_review_budget"] == 2.0 for row in adaptive_rows)
+    assert all(row["adaptive_control_action"] in {"preserve", "prune", "defer"} for row in adaptive_rows)
+
+
+def test_sequence_branch_runner_supports_profile_selector_method(tmp_path):
+    manifest_path = create_real_manifest_fixture(tmp_path / "adaptive_selector")
+    base_config = build_test_config(tmp_path / "adaptive_selector")
+    config = base_config.model_copy(
+        update={
+            "experiment": base_config.experiment.model_copy(
+                update={"name": "sequence_branch_adaptive_selector_fixture", "output_root": tmp_path / "runs"}
+            ),
+            "dataset": base_config.dataset.model_copy(
+                update={
+                    "source": "manifest",
+                    "manifest_path": manifest_path,
+                    "generate_if_missing": False,
+                    "train_split": "train",
+                    "val_split": "val",
+                    "evaluation_split": "test",
+                }
+            ),
+            "evaluation": base_config.evaluation.model_copy(update={"ambiguity_levels": [0.0], "top_k": 3}),
+            "sequence_benchmark": SequenceBenchmarkConfig(
+                enabled=True,
+                task_name="real_grouped_manifest_sequences",
+                selected_symbol_count=4,
+                min_instances_per_symbol=2,
+                train_sequences=1,
+                val_sequences=1,
+                test_sequences=1,
+                sequence_length=6,
+                group_count=2,
+                self_transition_bias=3.0,
+                within_group_bias=1.5,
+                cross_group_bias=0.35,
+                transition_noise=0.05,
+                sample_with_replacement=False,
+                minimum_real_sequence_length=4,
+                maximum_real_sequence_length=6,
+            ),
+            "structured_uncertainty": StructuredUncertaintyConfig(
+                enabled=True,
+                max_candidates_per_position=3,
+                cumulative_probability_mass=0.95,
+                min_probability=1.0e-5,
+                include_top1_fallback=True,
+            ),
+            "decoding": DecodingConfig(
+                enabled=True,
+                decoder_variants=["bigram_beam"],
+                beam_width=6,
+                lm_weight=1.2,
+                transition_smoothing=0.1,
+                top_k_sequences=3,
+                length_normalize=True,
+            ),
+            "adaptive_decoding": AdaptiveDecodingConfig(
+                enabled=True,
+                policy="support_aware_profile_selector",
+                review_budget_k=2,
+                learned_gate_steps=500,
+                selector_steps=500,
+            ),
+            "risk_control": RiskControlConfig(
+                enabled=True,
+                alpha=0.1,
+                min_set_size=1,
+                max_set_size=3,
+                include_top1_fallback=True,
+            ),
+            "real_downstream": RealDownstreamConfig(
+                enabled=True,
+                task_name="train_supported_ngram_path",
+                transcript_top_k=3,
+                min_frequency=1,
+                exact_length_only=True,
+                missing_log_probability=1.0e-8,
+                ngram_order=2,
+                min_supported_ngrams=1,
+            ),
+        }
+    )
+
+    result = run_sequence_branch_experiment(config, strategy_override="calibrated_classifier")
+    methods = {row["method"] for row in result["summary_rows"]}
+    adaptive_rows = [row for row in result["per_sequence_rows"] if row["method"] == "adaptive_profile_selector_beam"]
+
+    assert methods == {"fixed_greedy", "uncertainty_beam", "conformal_beam", "adaptive_profile_selector_beam"}
+    assert adaptive_rows
+    assert all(row["adaptive_operating_profile"] in {"rescue_first", "shortlist_first"} for row in adaptive_rows)
+    assert any(row["adaptive_selector_shortlist_probability"] is not None for row in adaptive_rows)
+    assert all(row["adaptive_control_action"] in {"preserve", "prune", "defer"} for row in adaptive_rows)

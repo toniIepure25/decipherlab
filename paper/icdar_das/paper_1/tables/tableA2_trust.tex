@@ -1,0 +1,21 @@
+\begin{table}[t]
+\caption{Historical Newspapers trust hardening.}
+\label{tab:appendix_trust}
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{1.06}
+\begin{tabular}{@{}p{1.7cm}p{2.8cm}cp{4.5cm}@{}}
+\toprule
+\textbf{Category} & \textbf{Metric} & \textbf{Value} & \textbf{Interpretation} \\
+\midrule
+Validation audit & Audited tokens & 126 & Full Historical Newspapers test split visual audit. \\
+Validation audit & Audited grouped sequences & 30 & Grouped sequences reviewed in the audit pass. \\
+Validation audit & Changed tokens & 2 & Only two OCR-derived token labels changed. \\
+Gold-style check & Pass agreement rate & 1.000 & Pass A and Pass B agreed completely on the adjudicated subset. \\
+Gold-style check & OCR-to-gold token error rate & 0.016 & OCR disagreement against gold-style labels remained low. \\
+Gold-style check & OCR-to-gold grouped error rate & 0.033 & Grouped sequence disagreement rate remained low. \\
+Metric stability & Gold minus original conformal exact delta & 0.000 & Grouped metrics did not drift after gold-style adjudication. \\
+\bottomrule
+\end{tabular}
+\end{table}

@@ -40,6 +40,26 @@ def sequence_top_k_recovery(result: BeamDecodingResult, truth: list[str]) -> flo
     return float(any(tuple(sequence.symbols) == truth_tuple for sequence in result.sequences))
 
 
+def sequence_top_k_recovery_at_budget(
+    result: BeamDecodingResult,
+    truth: list[str],
+    *,
+    budget: int,
+) -> float:
+    if budget <= 0:
+        return 0.0
+    truth_tuple = tuple(truth)
+    return float(any(tuple(sequence.symbols) == truth_tuple for sequence in result.sequences[:budget]))
+
+
+def shortlist_utility_score(result: BeamDecodingResult, truth: list[str]) -> float:
+    # Favor rescuing the truth in very small operator-facing shortlists.
+    recall_at_2 = sequence_top_k_recovery_at_budget(result, truth, budget=2)
+    recall_at_3 = sequence_top_k_recovery_at_budget(result, truth, budget=3)
+    recall_at_5 = sequence_top_k_recovery_at_budget(result, truth, budget=5)
+    return float(0.5 * recall_at_2 + 0.3 * recall_at_3 + 0.2 * recall_at_5)
+
+
 def sequence_metric_bundle(result: BeamDecodingResult, truth: list[str]) -> dict[str, float]:
     predicted = result.best.symbols if result.sequences else []
     edit_distance = sequence_edit_distance(predicted, truth)
@@ -47,5 +67,9 @@ def sequence_metric_bundle(result: BeamDecodingResult, truth: list[str]) -> dict
         "sequence_exact_match": sequence_exact_match(predicted, truth),
         "sequence_token_accuracy": sequence_token_accuracy(predicted, truth),
         "sequence_topk_recovery": sequence_top_k_recovery(result, truth),
+        "sequence_shortlist_recall_at_2": sequence_top_k_recovery_at_budget(result, truth, budget=2),
+        "sequence_shortlist_recall_at_3": sequence_top_k_recovery_at_budget(result, truth, budget=3),
+        "sequence_shortlist_recall_at_5": sequence_top_k_recovery_at_budget(result, truth, budget=5),
+        "sequence_shortlist_utility": shortlist_utility_score(result, truth),
         "sequence_cer": (edit_distance / len(truth)) if truth else 0.0,
     }

@@ -1,0 +1,19 @@
+\section{Support-Aware Uncertainty Propagation}
+
+\subsection{Uncertainty-Preserving Recognition Stack}
+
+The underlying pipeline preserves multiple transcription alternatives through confusion-network style posteriors instead of collapsing immediately to a single transcript. The evidence base includes six decoder variants: fixed greedy, uncertainty beam, conformal beam, uncertainty trigram beam, conformal trigram beam, and a CRF-style exact decoder. These decoder comparisons are part of the study, but they are not the main paper contribution. Their role here is to show that the remaining bottleneck is not decoder count alone.
+
+\subsection{Propagation Framework}
+
+We formalize propagation across three levels. Level 1 is symbol rescue, defined by whether preserved uncertainty retains the correct alternative beyond the top-one prediction. Level 2 is grouped rescue, measured through grouped top-k recovery, grouped exact recovery, and token-level grouped accuracy. Level 3 is downstream recovery, measured on the redesigned real downstream task through exact structural recovery, partial token recovery, and coverage-aware error summaries.
+
+Propagation is directional. Symbol rescue may or may not produce grouped rescue. Grouped rescue may or may not produce downstream success. The scientific question is therefore not whether uncertainty helps somewhere in the pipeline, but under what measurable support conditions the benefit survives to the next level.
+
+\subsection{Propagation Features}
+
+For each grouped or downstream evaluation unit, we extract a compact support representation including symbol rescue, grouped rescue, downstream success, posterior entropy, top-one margin, candidate-set size, conformal set size, ambiguity regime, sequence length, corpus identity, decoder identity, posterior family, coverage indicators, and train-support density. This feature layer keeps the analysis interpretable and auditable.
+
+\subsection{Explanatory Analysis}
+
+The explanatory layer uses simple, defensible models rather than black-box predictors. Logistic summaries, threshold analysis, regime partitions, and example-based case studies are used to answer four questions: what predicts grouped rescue, what predicts downstream success, what predicts failure to propagate, and whether conformal helps in a different support regime than raw uncertainty. The aim is explanation, not leaderboard prediction.

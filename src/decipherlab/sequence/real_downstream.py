@@ -43,10 +43,12 @@ def build_transcript_bank(
     config: RealDownstreamConfig,
 ) -> TranscriptBank:
     counts_by_length: dict[int, Counter[tuple[str, ...]]] = defaultdict(Counter)
+    length_support_counts: Counter[int] = Counter()
     for example in examples:
         transcript = tuple(symbol for symbol in example.observed_symbols if symbol is not None)
         if transcript:
             counts_by_length[len(transcript)][transcript] += 1
+            length_support_counts[len(transcript)] += 1
     return TranscriptBank(
         by_length={
             length: [
@@ -59,6 +61,7 @@ def build_transcript_bank(
         metadata={
             "task_name": config.task_name,
             "length_count": len(counts_by_length),
+            "length_support_counts": {str(length): int(count) for length, count in sorted(length_support_counts.items())},
             "min_frequency": config.min_frequency,
             "transcript_top_k": config.transcript_top_k,
         },
@@ -77,9 +80,12 @@ def build_supported_ngram_inventory(
 ) -> SupportedNGramInventory:
     order = config.ngram_order
     inventory: set[tuple[str, ...]] = set()
+    length_support_counts: Counter[int] = Counter()
     for example in examples:
         transcript = tuple(symbol for symbol in example.observed_symbols if symbol is not None)
         inventory.update(_ngram_tokens(transcript, order))
+        if transcript:
+            length_support_counts[len(transcript)] += 1
     return SupportedNGramInventory(
         order=order,
         inventory=inventory,
@@ -87,6 +93,7 @@ def build_supported_ngram_inventory(
             "task_name": config.task_name,
             "ngram_order": order,
             "inventory_size": len(inventory),
+            "length_support_counts": {str(length): int(count) for length, count in sorted(length_support_counts.items())},
             "min_supported_ngrams": config.min_supported_ngrams,
         },
     )

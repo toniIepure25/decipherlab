@@ -9,16 +9,15 @@
 2. What is complete
 
    - IEEE bibliography assets are active in `main.tex`.
-   - Template-compatible abbreviation strings are available locally.
-   - The compiled manuscript now uses a real IEEE bibliography section.
-   - Active entries cover the local benchmark sources named in the manuscript:
-     - `Omniglot`
-     - `scikit-learn digits`
-     - `Kuzushiji-49`
-     - `Historical Newspapers Ground Truth`
-     - `ScaDS.AI German line- and word-level handwriting dataset`
+   - The manuscript now cites field-facing work in:
+     - calibration and uncertainty quantification;
+     - support-aware or set-valued prediction framing;
+     - structured decoding for sequence recognition;
+     - handwriting recognition background; and
+     - benchmark and dataset provenance.
+   - Dataset references for Historical Newspapers and ScaDS.AI remain explicit public-record citations rather than placeholder prose.
 
-3. What still needs manual bibliography completion
+3. What still needs manual completion
 
-   - The active `.bib` entries are conservative local-source records rather than fully resolved archival citations.
-   - If final authors want richer metadata such as full author lists, URLs, or DOIs, those entries should be upgraded manually before submission.
+   - The two real grouped corpora are cited through dataset records rather than fuller archival dataset papers because those records are the active verified sources used in the project.
+   - If the final submission prefers richer archival metadata for any dataset entry, that can still be upgraded manually before camera-ready.

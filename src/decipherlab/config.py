@@ -173,6 +173,60 @@ class DecodingConfig(BaseModel):
     length_normalize: bool = True
 
 
+class AdaptiveDecodingConfig(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    enabled: bool = False
+    policy: Literal[
+        "support_aware_rule",
+        "support_aware_learned_gate",
+        "support_aware_constrained_gate",
+        "support_aware_profiled_gate",
+        "support_aware_profile_selector",
+    ] = "support_aware_rule"
+    operating_profile: Literal["rescue_first", "shortlist_first"] = "rescue_first"
+    review_budget_k: Literal[2, 3, 5] = 3
+    conformal_entropy_threshold: float = Field(default=0.5, ge=0.0)
+    raw_entropy_threshold: float = Field(default=1.15, ge=0.0)
+    conformal_set_size_threshold: float = Field(default=2.0, ge=1.0)
+    minimum_set_size_for_conformal: float = Field(default=1.1, ge=1.0)
+    raw_set_size_threshold: float = Field(default=3.5, ge=1.0)
+    low_support_length_count_threshold: int = Field(default=4, ge=0)
+    narrow_beam_width: int = Field(default=4, ge=1)
+    wide_beam_width: int = Field(default=12, ge=1)
+    prefer_conformal_for_calibrated: bool = True
+    learned_gate_learning_rate: float = Field(default=0.2, gt=0.0)
+    learned_gate_steps: int = Field(default=2000, ge=100)
+    learned_gate_l2_penalty: float = Field(default=1.0e-2, ge=0.0)
+    learned_gate_decision_threshold: float = Field(default=0.5, gt=0.0, lt=1.0)
+    learned_gate_prediction_set_penalty: float = Field(default=0.05, ge=0.0)
+    constrained_min_utility_margin: float = Field(default=0.02, ge=0.0)
+    constrained_max_grouped_topk_drop: float = Field(default=0.02, ge=0.0)
+    constrained_max_grouped_exact_drop: float = Field(default=0.0, ge=0.0)
+    constrained_min_downstream_exact_gain: float = Field(default=0.0)
+    constrained_max_wide_set_size_inflation: float = Field(default=0.75, ge=0.0)
+    constrained_min_wide_grouped_topk_gain: float = Field(default=0.02, ge=0.0)
+    constrained_conformal_threshold: float = Field(default=0.6, gt=0.0, lt=1.0)
+    constrained_wide_threshold: float = Field(default=0.55, gt=0.0, lt=1.0)
+    shortlist_utility_weight: float = Field(default=0.75, ge=0.0)
+    tight_review_budget_threshold: int = Field(default=3, ge=1)
+    budget_threshold_delta: float = Field(default=0.08, ge=0.0, le=0.5)
+    enable_defer_to_human: bool = True
+    defer_entropy_threshold: float = Field(default=1.2, ge=0.0)
+    defer_set_size_threshold: float = Field(default=3.0, ge=1.0)
+    defer_length_support_threshold: int = Field(default=2, ge=0)
+    defer_min_fragile_signals: int = Field(default=2, ge=1)
+    selector_learning_rate: float = Field(default=0.2, gt=0.0)
+    selector_steps: int = Field(default=2000, ge=100)
+    selector_l2_penalty: float = Field(default=1.0e-2, ge=0.0)
+    selector_decision_threshold: float = Field(default=0.5, gt=0.0, lt=1.0)
+    selector_min_effort_margin: float = Field(default=0.01, ge=0.0)
+    selector_max_grouped_topk_drop: float = Field(default=0.04, ge=0.0)
+    selector_min_downstream_exact_gain: float = Field(default=-0.01)
+    selector_enable_direct_defer: bool = True
+    selector_defer_margin: float = Field(default=0.08, ge=0.0, le=0.5)
+
+
 class RiskControlConfig(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
@@ -215,6 +269,7 @@ class DecipherLabConfig(BaseModel):
     sequence_benchmark: SequenceBenchmarkConfig = Field(default_factory=SequenceBenchmarkConfig)
     structured_uncertainty: StructuredUncertaintyConfig = Field(default_factory=StructuredUncertaintyConfig)
     decoding: DecodingConfig = Field(default_factory=DecodingConfig)
+    adaptive_decoding: AdaptiveDecodingConfig = Field(default_factory=AdaptiveDecodingConfig)
     risk_control: RiskControlConfig = Field(default_factory=RiskControlConfig)
     real_downstream: RealDownstreamConfig = Field(default_factory=RealDownstreamConfig)
 

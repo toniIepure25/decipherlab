@@ -1,0 +1,17 @@
+\section{Experimental Setup}
+
+\subsection{Synthetic-From-Real Sequence Tasks}
+
+The synthetic benchmark layer uses real glyph imagery from Omniglot, scikit-learn Digits, and Kuzushiji-49~\cite{lake2015omniglot,pedregosa2011scikit,clanuwat2018kuzushiji} to build grouped and downstream evaluations with known structure. These tasks remain explicitly synthetic-from-real and are used to test whether preserved uncertainty can help beyond local symbol recognition under controlled ambiguity.
+
+\subsection{Real Grouped Corpora}
+
+The real grouped evidence comes from two token-aligned corpora that feed the existing grouped workflow directly: Historical Newspapers grouped word sequences with ALTO token boxes~\cite{historical_newspapers_gt}, and ScaDS.AI grouped words~\cite{scadsai_grouped_words}. These datasets support the same uncertainty-preserving decoding interface without a broader segmentation rewrite.
+
+Historical Newspapers received the strongest additional trust hardening in the study. The full evaluated split, 126 tokens across 30 grouped sequences, was visually audited. Only two OCR-derived tokens changed, gold-style pass agreement was 1.000, and grouped metrics showed zero drift across OCR-derived, audited, and gold-style labels. This strengthens the bounded trustworthiness of the Historical grouped benchmark.
+
+\subsection{Real Downstream Task}
+
+The initial real downstream task, exact train transcript bank recovery, suffered from severe train to test coverage collapse. The current paper therefore uses the redesigned \texttt{train\_supported\_ngram\_path} task, instantiated as a train-supported bigram-path recovery target derived from training transcripts only. This redesign preserves the real grouped transcripts while materially improving downstream support coverage.
+
+Coverage improvement is substantial. Historical Newspapers rises from a full-path upper bound of 0.000 under exact transcript-bank overlap to 0.667 under the redesigned task, while ScaDS.AI rises from 0.111 to 1.000. The redesigned task is still bounded and local in semantics, but it removes the strongest trivial-coverage objection to the real downstream analysis.

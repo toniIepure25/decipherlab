@@ -2,24 +2,20 @@
 
 ## Figure 1
 
-Support regimes on the real downstream task. Real downstream rescue rates are separated by method family, support regime, and entropy regime. The figure shows that raw uncertainty and conformal help in different parts of the support space, which explains the mixed downstream result without claiming universal downstream improvement.
+From replicated grouped rescue to support-gated downstream rescue. Panel A shows the paper's strongest replicated real-data signal: grouped top-k rescue is positive on both real grouped corpora across both posterior families. Panels B and C show the explanatory result: downstream rescue depends on support regime, and raw uncertainty versus conformal help in different parts of that space.
 
 ## Table 1
 
-Evidence ladder for the paper's main claims. The table separates fully real symbol-level evidence, synthetic-from-real grouped and downstream evidence, replicated real grouped transfer, and the redesigned real downstream task so that the paper's claim boundary stays explicit.
-
-## Figure 2
-
-Real grouped replication across Historical Newspapers and ScaDS.AI. Grouped top-k rescue remains positive on both corpora, while exact gains remain mixed. The left panel carries the strongest replicated real-data result in the paper.
+Evidence boundary. The table separates the fully real symbol result, the synthetic structural bridge, the replicated real grouped result, and the redesigned real downstream task without pushing trust-audit detail into the main-page summary.
 
 ## Figure A1
 
-Redesigned real downstream task. Coverage improves substantially relative to exact transcript-bank recovery, but exact downstream gains remain selective across the two real grouped corpora.
+Redesigned real downstream task. Coverage improves substantially relative to exact transcript-bank recovery, but exact downstream gains remain selective across the two real grouped corpora. Separating coverage, raw exact deltas, and conformal exact deltas keeps the comparison legible at conference scale.
 
 ## Table A1
 
-Bootstrap support for the main reviewer-facing claims. The grouped top-k result is statistically stable, while exact real downstream gains remain selective.
+Bootstrap support for the main claims. The grouped top-k result is statistically stable, while the real downstream exact result remains selective.
 
 ## Table A2
 
-Historical Newspapers trust hardening summary. The strengthened grouped result remains stable across OCR-derived, audited, and gold-style labels.
+Historical Newspapers trust hardening. The strengthened grouped benchmark stays stable across OCR-derived, audited, and gold-style review.

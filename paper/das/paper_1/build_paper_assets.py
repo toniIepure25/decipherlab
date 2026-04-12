@@ -56,50 +56,92 @@ def _save(fig: plt.Figure, stem: str) -> None:
 
 
 def build_propagation_regime_figure() -> None:
-    rows = _read_csv(OUTPUTS / "propagation_regime_summary.csv")
+    replication_rows = _read_csv(OUTPUTS / "real_grouped_replication_summary.csv")
+    regime_rows = _read_csv(OUTPUTS / "propagation_regime_summary.csv")
+
+    dataset_labels = {
+        ("historical_newspapers_real_grouped_gold", "calibrated_classifier"): "Historical N. / calibrated",
+        ("historical_newspapers_real_grouped_gold", "cluster_distance"): "Historical N. / distance",
+        ("scadsai_real_grouped", "calibrated_classifier"): "ScaDS.AI / calibrated",
+        ("scadsai_real_grouped", "cluster_distance"): "ScaDS.AI / distance",
+    }
+    dataset_colors = {
+        "historical_newspapers_real_grouped_gold": "#4c78a8",
+        "scadsai_real_grouped": "#e45756",
+    }
+    ordered_replication = sorted(
+        replication_rows,
+        key=lambda row: (
+            0 if row["dataset"] == "historical_newspapers_real_grouped_gold" else 1,
+            0 if row["posterior_strategy_requested"] == "calibrated_classifier" else 1,
+        ),
+    )
+
     regime_order = [
         ("limited_support", "low_entropy"),
         ("high_support", "low_entropy"),
         ("high_support", "high_entropy"),
     ]
-    label_map = {
-        ("limited_support", "low_entropy"): "Limited support\nLow entropy",
-        ("high_support", "low_entropy"): "High support\nLow entropy",
-        ("high_support", "high_entropy"): "High support\nHigh entropy",
+    regime_labels = {
+        ("limited_support", "low_entropy"): "Limited support,\nlow entropy",
+        ("high_support", "low_entropy"): "High support,\nlow entropy",
+        ("high_support", "high_entropy"): "High support,\nhigh entropy",
     }
     family_map = {
-        "conformal": ("Conformal", "#dd8452"),
         "raw_uncertainty": ("Raw uncertainty", "#4c78a8"),
+        "conformal": ("Conformal", "#dd8452"),
     }
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.1, 3.0), sharex=True, constrained_layout=True)
-    for ax, family_key in zip(axes, ["conformal", "raw_uncertainty"]):
-        family_rows = { (row["support_regime"], row["entropy_regime"]): row for row in rows if row["method_family"] == family_key }
-        plot_labels: list[str] = []
-        plot_values: list[float] = []
-        grouped_rates: list[float] = []
-        counts: list[int] = []
-        for key in regime_order:
-            row = family_rows.get(key)
-            if row is None:
-                continue
-            plot_labels.append(label_map[key])
-            plot_values.append(_to_float(row["downstream_exact_rescue_rate"]))
-            grouped_rates.append(_to_float(row["grouped_topk_rescue_rate"]))
-            counts.append(int(row["count"]))
-        y = np.arange(len(plot_labels))
-        ax.barh(y, plot_values, color=family_map[family_key][1], height=0.6)
-        ax.set_yticks(y, plot_labels)
-        ax.invert_yaxis()
-        ax.set_xlim(0.0, 0.5)
-        ax.axvline(0.0, color="black", linewidth=0.8)
-        ax.set_title(family_map[family_key][0])
-        for idx, (value, grouped_rate, count) in enumerate(zip(plot_values, grouped_rates, counts)):
-            ax.text(min(value + 0.012, 0.48), idx, f"{value:.2f}  (grp {grouped_rate:.2f}, n={count})", va="center", fontsize=7.2)
-    axes[0].set_ylabel("Support regime")
-    axes[0].set_xlabel("Downstream exact rescue rate")
-    axes[1].set_xlabel("Downstream exact rescue rate")
-    fig.suptitle("Support regimes for real downstream rescue")
+    fig, (ax_top, ax_bottom) = plt.subplots(2, 1, figsize=(7.1, 4.1), gridspec_kw={"height_ratios": [1.0, 1.08]})
+
+    labels = [dataset_labels[(row["dataset"], row["posterior_strategy_requested"])] for row in ordered_replication]
+    values = [_to_float(row["mean_uncertainty_sequence_topk_delta"]) for row in ordered_replication]
+    colors = [dataset_colors[row["dataset"]] for row in ordered_replication]
+    y = np.arange(len(labels))
+    ax_top.barh(y, values, color=colors, height=0.58)
+    ax_top.set_yticks(y, labels)
+    ax_top.invert_yaxis()
+    ax_top.set_xlim(0.0, 0.42)
+    ax_top.set_xlabel("Grouped top-k delta")
+    ax_top.set_title("A. Replicated grouped rescue", loc="left", fontweight="bold", fontsize=9.6)
+    for idx, value in enumerate(values):
+        ax_top.text(value + 0.011, idx, f"{value:.2f}", va="center", fontsize=7.0)
+
+    regime_index = np.arange(len(regime_order))
+    bar_height = 0.28
+    for offset, family_key in [(-bar_height / 2, "raw_uncertainty"), (bar_height / 2, "conformal")]:
+        family_rows = {(row["support_regime"], row["entropy_regime"]): row for row in regime_rows if row["method_family"] == family_key}
+        plotted_keys = [key for key in regime_order if key in family_rows]
+        plotted_positions = [regime_order.index(key) + offset for key in plotted_keys]
+        plotted_values = [_to_float(family_rows[key]["downstream_exact_rescue_rate"]) for key in plotted_keys]
+        ax_bottom.barh(
+            plotted_positions,
+            plotted_values,
+            height=bar_height,
+            color=family_map[family_key][1],
+            label=family_map[family_key][0],
+        )
+        for pos, regime_key, value in zip(plotted_positions, plotted_keys, plotted_values):
+            grouped_rate = _to_float(family_rows[regime_key]["grouped_topk_rescue_rate"])
+            ax_bottom.text(min(value + 0.012, 0.47), pos, f"{value:.2f}", va="center", fontsize=6.8)
+            ax_bottom.text(0.01, pos + 0.23, f"grouped {grouped_rate:.2f}", va="center", fontsize=6.0, color="#666666")
+
+    ax_bottom.set_yticks(regime_index, [regime_labels[key] for key in regime_order])
+    ax_bottom.invert_yaxis()
+    ax_bottom.set_xlim(0.0, 0.5)
+    ax_bottom.set_xlabel("Downstream exact rescue")
+    ax_bottom.set_title("B. Support-gated downstream rescue", loc="left", fontweight="bold", fontsize=9.6, pad=18)
+    ax_bottom.legend(
+        loc="upper right",
+        bbox_to_anchor=(0.99, 1.17),
+        frameon=False,
+        ncol=2,
+        columnspacing=1.3,
+        handlelength=1.6,
+        borderaxespad=0.0,
+    )
+    ax_bottom.tick_params(axis="y", labelsize=7.6, pad=4)
+    fig.subplots_adjust(left=0.24, right=0.98, top=0.93, bottom=0.12, hspace=0.50)
     _save(fig, "fig1_propagation_regime_plot")
 
 
@@ -187,26 +229,38 @@ def build_real_downstream_figure() -> None:
     colors = [color_map[row["dataset"]] for row in ordered_rows]
     y = np.arange(len(labels))
 
-    fig, axes = plt.subplots(1, 2, figsize=(7.1, 3.4), constrained_layout=True)
+    fig, axes = plt.subplots(1, 3, figsize=(7.1, 2.55), gridspec_kw={"width_ratios": [1.1, 1.0, 1.0]})
     axes[0].barh(y, coverage, color=colors, height=0.6)
     axes[0].set_yticks(y, labels)
     axes[0].invert_yaxis()
     axes[0].set_xlim(0.0, 1.08)
-    axes[0].set_xlabel("Coverage fraction")
-    axes[0].set_title("Redesigned task coverage")
+    axes[0].set_xlabel("Coverage")
+    axes[0].set_title("A. Coverage", fontsize=9.4)
     for idx, value in enumerate(coverage):
-        axes[0].text(value + 0.02, idx, f"{value:.2f}", va="center", fontsize=7.5)
+        axes[0].text(value + 0.02, idx, f"{value:.2f}", va="center", fontsize=7.1)
 
-    bar_height = 0.32
-    axes[1].barh(y - bar_height / 2, raw_exact, color="#9aa6b2", height=bar_height, label="Raw exact delta")
-    axes[1].barh(y + bar_height / 2, conformal_exact, color="#dd8452", height=bar_height, label="Conformal exact delta")
-    axes[1].set_yticks(y, labels)
+    axes[1].barh(y, raw_exact, color="#9aa6b2", height=0.6)
+    axes[1].set_yticks(y, ["", "", "", ""])
     axes[1].invert_yaxis()
     axes[1].axvline(0.0, color="black", linewidth=0.8)
     axes[1].set_xlim(-0.18, 0.28)
-    axes[1].set_xlabel("Downstream exact delta")
-    axes[1].set_title("Selective downstream gains")
-    axes[1].legend(loc="lower right", frameon=False)
+    axes[1].set_xlabel("Exact delta")
+    axes[1].set_title("B. Raw uncertainty", fontsize=9.4)
+    for idx, value in enumerate(raw_exact):
+        offset = 0.012 if value >= 0 else -0.012
+        axes[1].text(value + offset, idx, f"{value:.2f}", va="center", ha="left" if value >= 0 else "right", fontsize=6.9)
+
+    axes[2].barh(y, conformal_exact, color="#dd8452", height=0.6)
+    axes[2].set_yticks(y, ["", "", "", ""])
+    axes[2].invert_yaxis()
+    axes[2].axvline(0.0, color="black", linewidth=0.8)
+    axes[2].set_xlim(-0.18, 0.28)
+    axes[2].set_xlabel("Exact delta")
+    axes[2].set_title("C. Conformal", fontsize=9.4)
+    for idx, value in enumerate(conformal_exact):
+        offset = 0.012 if value >= 0 else -0.012
+        axes[2].text(value + offset, idx, f"{value:.2f}", va="center", ha="left" if value >= 0 else "right", fontsize=6.9)
+    fig.subplots_adjust(left=0.12, right=0.99, top=0.84, bottom=0.18, wspace=0.33)
     _save(fig, "figA1_real_downstream_redesigned_plot")
 
 
